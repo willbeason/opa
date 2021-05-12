@@ -40,6 +40,8 @@ import (
 	"github.com/open-policy-agent/opa/util/test"
 )
 
+const keyID = "key1"
+
 func TestNew(t *testing.T) {
 
 	tests := []struct {
@@ -622,7 +624,7 @@ func TestNew(t *testing.T) {
 	})
 
 	ks := map[string]*keys.Config{
-		"key1": {
+		keyID: {
 			PrivateKey: string(keyPem),
 			Algorithm:  "RS256",
 		},
@@ -1183,7 +1185,7 @@ func TestOauth2JwtBearerGrantType(t *testing.T) {
 	}
 	keyPem := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)})
 	ks := map[string]*keys.Config{
-		"key1": {
+		keyID: {
 			PrivateKey: string(keyPem),
 			Algorithm:  "RS256",
 		},
@@ -1206,7 +1208,7 @@ func TestOauth2JwtBearerGrantType(t *testing.T) {
 	defer ots.stop()
 
 	client := newOauth2JwtBearerTestClient(t, ks, &ts, &ots, func(c *Config) {
-		c.Credentials.OAuth2.SigningKeyID = "key1"
+		c.Credentials.OAuth2.SigningKeyID = keyID
 	})
 	ctx := context.Background()
 	_, err = client.Do(ctx, "GET", "test")
@@ -1228,7 +1230,7 @@ func TestOauth2JwtBearerGrantTypePKCS8EncodedPrivateKey(t *testing.T) {
 
 	keyPem := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: privateKey})
 	ks := map[string]*keys.Config{
-		"key1": {
+		keyID: {
 			PrivateKey: string(keyPem),
 			Algorithm:  "RS256",
 		},
@@ -1251,7 +1253,7 @@ func TestOauth2JwtBearerGrantTypePKCS8EncodedPrivateKey(t *testing.T) {
 	defer ots.stop()
 
 	client := newOauth2JwtBearerTestClient(t, ks, &ts, &ots, func(c *Config) {
-		c.Credentials.OAuth2.SigningKeyID = "key1"
+		c.Credentials.OAuth2.SigningKeyID = keyID
 	})
 	ctx := context.Background()
 	_, err = client.Do(ctx, "GET", "test")
@@ -1272,7 +1274,7 @@ func TestOauth2JwtBearerGrantTypeEllipticCurveAlgorithm(t *testing.T) {
 
 	keyPem := pem.EncodeToMemory(&pem.Block{Type: "EC PRIVATE KEY", Bytes: privateKey})
 	ks := map[string]*keys.Config{
-		"key1": {
+		keyID: {
 			PrivateKey: string(keyPem),
 			Algorithm:  "ES256",
 		},
@@ -1295,7 +1297,7 @@ func TestOauth2JwtBearerGrantTypeEllipticCurveAlgorithm(t *testing.T) {
 	defer ots.stop()
 
 	client := newOauth2JwtBearerTestClient(t, ks, &ts, &ots, func(c *Config) {
-		c.Credentials.OAuth2.SigningKeyID = "key1"
+		c.Credentials.OAuth2.SigningKeyID = keyID
 		c.Credentials.OAuth2.IncludeJti = true
 	})
 	ctx := context.Background()
@@ -1317,7 +1319,7 @@ func TestOauth2ClientCredentialsJwtAuthentication(t *testing.T) {
 	}
 	keyPem := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)})
 	ks := map[string]*keys.Config{
-		"key1": {
+		keyID: {
 			PrivateKey: string(keyPem),
 			Algorithm:  "RS256",
 		},
@@ -1341,7 +1343,7 @@ func TestOauth2ClientCredentialsJwtAuthentication(t *testing.T) {
 	defer ots.stop()
 
 	client := newOauth2ClientCredentialsJwtAuthClient(t, ks, &ts, &ots, func(c *Config) {
-		c.Credentials.OAuth2.SigningKeyID = "key1"
+		c.Credentials.OAuth2.SigningKeyID = keyID
 	})
 	ctx := context.Background()
 	_, err = client.Do(ctx, "GET", "test")
