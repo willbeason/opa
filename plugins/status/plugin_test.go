@@ -133,8 +133,8 @@ func TestPluginStartBulkUpdateMultiple(t *testing.T) {
 	<-fixture.server.ch
 
 	statuses := map[string]*bundle.Status{}
-	tDownload, _ := time.Parse("2018-01-01T00:00:00.0000000Z", time.RFC3339Nano)
-	tActivate, _ := time.Parse("2018-01-01T00:00:01.0000000Z", time.RFC3339Nano)
+	tDownload, _ := time.Parse(time.RFC3339Nano, "2018-01-01T00:00:00.0000000Z")
+	tActivate, _ := time.Parse(time.RFC3339Nano, "2018-01-01T00:00:00.0000000Z")
 	for i := 0; i < 20; i++ {
 		name := fmt.Sprintf("test-bundle-%d", i)
 		statuses[name] = &bundle.Status{
@@ -444,8 +444,8 @@ func (t *testServer) stop() {
 
 func testStatus() *bundle.Status {
 
-	tDownload, _ := time.Parse("2018-01-01T00:00:00.0000000Z", time.RFC3339Nano)
-	tActivate, _ := time.Parse("2018-01-01T00:00:01.0000000Z", time.RFC3339Nano)
+	tDownload, _ := time.Parse(time.RFC3339Nano, "2018-01-01T00:00:00.0000000Z")
+	tActivate, _ := time.Parse(time.RFC3339Nano, "2018-01-01T00:00:00.0000000Z")
 
 	status := bundle.Status{
 		Name:                     "example/authz",

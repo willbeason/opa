@@ -137,5 +137,5 @@ func encodePrimitive(v interface{}) []byte {
 	encoder := json.NewEncoder(&buf)
 	encoder.SetEscapeHTML(false)
 	encoder.Encode(v)
-	return []byte(strings.Trim(string(buf.Bytes()), "\n"))
+	return []byte(strings.Trim(buf.String(), "\n"))
 }
