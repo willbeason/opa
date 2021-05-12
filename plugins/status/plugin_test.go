@@ -37,7 +37,10 @@ func TestPluginStart(t *testing.T) {
 
 	ctx := context.Background()
 
-	fixture.plugin.Start(ctx)
+	err := fixture.plugin.Start(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer fixture.plugin.Stop(ctx)
 
 	// Start will trigger a status update when the plugin state switches
@@ -61,10 +64,10 @@ func TestPluginStart(t *testing.T) {
 
 	status := testStatus()
 
-	fixture.plugin.UpdateBundleStatus(*status)
+	fixture.plugin.BulkUpdateBundleStatus(map[string]*bundle.Status{"test": status})
 	result = <-fixture.server.ch
 
-	exp.Bundle = status
+	exp.Bundles = map[string]*bundle.Status{"test": status}
 
 	if !reflect.DeepEqual(result, exp) {
 		t.Fatalf("Expected: %v but got: %v", exp, result)
@@ -79,7 +82,10 @@ func TestPluginStartBulkUpdate(t *testing.T) {
 
 	ctx := context.Background()
 
-	fixture.plugin.Start(ctx)
+	err := fixture.plugin.Start(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer fixture.plugin.Stop(ctx)
 
 	// Start will trigger a status update when the plugin state switches
@@ -117,7 +123,10 @@ func TestPluginStartBulkUpdateMultiple(t *testing.T) {
 
 	ctx := context.Background()
 
-	fixture.plugin.Start(ctx)
+	err := fixture.plugin.Start(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer fixture.plugin.Stop(ctx)
 
 	// Ignore the plugin updating its status (tested elsewhere)
@@ -172,7 +181,10 @@ func TestPluginStartDiscovery(t *testing.T) {
 
 	ctx := context.Background()
 
-	fixture.plugin.Start(ctx)
+	err := fixture.plugin.Start(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer fixture.plugin.Stop(ctx)
 
 	// Ignore the plugin updating its status (tested elsewhere)
@@ -205,7 +217,7 @@ func TestPluginBadAuth(t *testing.T) {
 	ctx := context.Background()
 	fixture.server.expCode = 401
 	defer fixture.server.stop()
-	fixture.plugin.lastBundleStatus = &bundle.Status{}
+	fixture.plugin.lastBundleStatuses = map[string]*bundle.Status{}
 	err := fixture.plugin.oneShot(ctx)
 	if err == nil {
 		t.Fatal("Expected error")
@@ -217,7 +229,7 @@ func TestPluginBadPath(t *testing.T) {
 	ctx := context.Background()
 	fixture.server.expCode = 404
 	defer fixture.server.stop()
-	fixture.plugin.lastBundleStatus = &bundle.Status{}
+	fixture.plugin.lastBundleStatuses = map[string]*bundle.Status{}
 	err := fixture.plugin.oneShot(ctx)
 	if err == nil {
 		t.Fatal("Expected error")
@@ -229,7 +241,7 @@ func TestPluginBadStatus(t *testing.T) {
 	ctx := context.Background()
 	fixture.server.expCode = 500
 	defer fixture.server.stop()
-	fixture.plugin.lastBundleStatus = &bundle.Status{}
+	fixture.plugin.lastBundleStatuses = map[string]*bundle.Status{}
 	err := fixture.plugin.oneShot(ctx)
 	if err == nil {
 		t.Fatal("Expected error")
@@ -267,7 +279,10 @@ func TestMetrics(t *testing.T) {
 
 	ctx := context.Background()
 
-	fixture.plugin.Start(ctx)
+	err := fixture.plugin.Start(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer fixture.plugin.Stop(ctx)
 
 	// Ignore the plugin updating its status (tested elsewhere)
@@ -296,7 +311,7 @@ func TestParseConfigUseDefaultServiceNoConsole(t *testing.T) {
 		"console": false
 	}`))
 
-	config, err := ParseConfig([]byte(loggerConfig), services, nil)
+	config, err := ParseConfig(loggerConfig, services, nil)
 
 	if err != nil {
 		t.Errorf("Unexpected error: %s", err)
@@ -318,7 +333,7 @@ func TestParseConfigDefaultServiceWithConsole(t *testing.T) {
 		"console": true
 	}`))
 
-	config, err := ParseConfig([]byte(loggerConfig), services, nil)
+	config, err := ParseConfig(loggerConfig, services, nil)
 
 	if err != nil {
 		t.Errorf("Unexpected error: %s", err)
@@ -332,7 +347,7 @@ func TestParseConfigDefaultServiceWithConsole(t *testing.T) {
 func TestParseConfigDefaultServiceWithNoServiceOrConsole(t *testing.T) {
 	loggerConfig := []byte(fmt.Sprintf(`{}`))
 
-	_, err := ParseConfig([]byte(loggerConfig), []string{}, nil)
+	_, err := ParseConfig(loggerConfig, []string{}, nil)
 
 	if err == nil {
 		t.Errorf("Expected an error but err==nil")
@@ -474,8 +489,14 @@ func TestPluginCustomBackend(t *testing.T) {
 	}
 
 	plugin := New(config, manager)
-	plugin.oneShot(ctx)
-	plugin.oneShot(ctx)
+	err = plugin.oneShot(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = plugin.oneShot(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	if len(backend.reqs) != 2 {
 		t.Fatalf("Unexpected number of reqs: expected 2, got %d: %v", len(backend.reqs), backend.reqs)
