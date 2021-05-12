@@ -621,7 +621,7 @@ func TestNew(t *testing.T) {
 		Bytes: x509.MarshalPKCS1PublicKey(&key.PublicKey),
 	})
 
-	keys := map[string]*keys.Config{
+	ks := map[string]*keys.Config{
 		"key1": {
 			PrivateKey: string(keyPem),
 			Algorithm:  "RS256",
@@ -644,8 +644,9 @@ func TestNew(t *testing.T) {
 				}
 			}()
 
-			client, err := New([]byte(tc.input), keys, AuthPluginLookup(mockAuthPluginLookup))
-			if err != nil && !tc.wantErr {
+			client, err := New([]byte(tc.input), ks, AuthPluginLookup(mockAuthPluginLookup))
+			if err != nil {
+				// We never want an error here and cannot proceed if there is one.
 				t.Fatalf("Unexpected error: %v", err)
 			}
 
@@ -718,8 +719,8 @@ func TestDoWithResponseHeaderTimeout(t *testing.T) {
 				"url": %q,
 				"response_header_timeout_seconds": %v,
 			}`, baseURL, tc.responseHeaderTimeout)
-			keys := map[string]*keys.Config{}
-			client, err := New([]byte(config), keys)
+			ks := map[string]*keys.Config{}
+			client, err := New([]byte(config), ks)
 			if err != nil {
 				t.Fatalf("Unexpected error: %v", err)
 			}
@@ -782,8 +783,8 @@ func testBearerToken(t *testing.T, scheme, token string) {
 			}
 		}
 	}`, ts.server.URL, scheme, token)
-	keys := map[string]*keys.Config{}
-	client, err := New([]byte(config), keys)
+	ks := map[string]*keys.Config{}
+	client, err := New([]byte(config), ks)
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
@@ -1181,7 +1182,7 @@ func TestOauth2JwtBearerGrantType(t *testing.T) {
 		t.Fatalf("Unexpected error %v", err)
 	}
 	keyPem := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)})
-	keys := map[string]*keys.Config{
+	ks := map[string]*keys.Config{
 		"key1": {
 			PrivateKey: string(keyPem),
 			Algorithm:  "RS256",
@@ -1204,7 +1205,7 @@ func TestOauth2JwtBearerGrantType(t *testing.T) {
 	ots.start()
 	defer ots.stop()
 
-	client := newOauth2JwtBearerTestClient(t, keys, &ts, &ots, func(c *Config) {
+	client := newOauth2JwtBearerTestClient(t, ks, &ts, &ots, func(c *Config) {
 		c.Credentials.OAuth2.SigningKeyID = "key1"
 	})
 	ctx := context.Background()
@@ -1226,7 +1227,7 @@ func TestOauth2JwtBearerGrantTypePKCS8EncodedPrivateKey(t *testing.T) {
 	}
 
 	keyPem := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: privateKey})
-	keys := map[string]*keys.Config{
+	ks := map[string]*keys.Config{
 		"key1": {
 			PrivateKey: string(keyPem),
 			Algorithm:  "RS256",
@@ -1249,7 +1250,7 @@ func TestOauth2JwtBearerGrantTypePKCS8EncodedPrivateKey(t *testing.T) {
 	ots.start()
 	defer ots.stop()
 
-	client := newOauth2JwtBearerTestClient(t, keys, &ts, &ots, func(c *Config) {
+	client := newOauth2JwtBearerTestClient(t, ks, &ts, &ots, func(c *Config) {
 		c.Credentials.OAuth2.SigningKeyID = "key1"
 	})
 	ctx := context.Background()
@@ -1270,7 +1271,7 @@ func TestOauth2JwtBearerGrantTypeEllipticCurveAlgorithm(t *testing.T) {
 	}
 
 	keyPem := pem.EncodeToMemory(&pem.Block{Type: "EC PRIVATE KEY", Bytes: privateKey})
-	keys := map[string]*keys.Config{
+	ks := map[string]*keys.Config{
 		"key1": {
 			PrivateKey: string(keyPem),
 			Algorithm:  "ES256",
@@ -1293,7 +1294,7 @@ func TestOauth2JwtBearerGrantTypeEllipticCurveAlgorithm(t *testing.T) {
 	ots.start()
 	defer ots.stop()
 
-	client := newOauth2JwtBearerTestClient(t, keys, &ts, &ots, func(c *Config) {
+	client := newOauth2JwtBearerTestClient(t, ks, &ts, &ots, func(c *Config) {
 		c.Credentials.OAuth2.SigningKeyID = "key1"
 		c.Credentials.OAuth2.IncludeJti = true
 	})
@@ -1315,7 +1316,7 @@ func TestOauth2ClientCredentialsJwtAuthentication(t *testing.T) {
 		t.Fatalf("Unexpected error %v", err)
 	}
 	keyPem := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)})
-	keys := map[string]*keys.Config{
+	ks := map[string]*keys.Config{
 		"key1": {
 			PrivateKey: string(keyPem),
 			Algorithm:  "RS256",
@@ -1339,7 +1340,7 @@ func TestOauth2ClientCredentialsJwtAuthentication(t *testing.T) {
 	ots.start()
 	defer ots.stop()
 
-	client := newOauth2ClientCredentialsJwtAuthClient(t, keys, &ts, &ots, func(c *Config) {
+	client := newOauth2ClientCredentialsJwtAuthClient(t, ks, &ts, &ots, func(c *Config) {
 		c.Credentials.OAuth2.SigningKeyID = "key1"
 	})
 	ctx := context.Background()
