@@ -1139,7 +1139,6 @@ func (c *Compiler) rewriteComprehensionTerms() {
 		mod := c.Modules[name]
 		_, _ = rewriteComprehensionTerms(f, mod) // ignore error
 	}
-	return
 }
 
 func (c *Compiler) rewriteExprTerms() {

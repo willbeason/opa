@@ -854,9 +854,8 @@ func (ref Ref) Insert(x *Term, pos int) Ref {
 // other will be converted to a string.
 func (ref Ref) Extend(other Ref) Ref {
 	dst := make(Ref, len(ref)+len(other))
-	for i := range ref {
-		dst[i] = ref[i]
-	}
+	copy(dst, ref)
+
 	head := other[0].Copy()
 	head.Value = String(head.Value.(Var))
 	offset := len(ref)
@@ -873,9 +872,8 @@ func (ref Ref) Concat(terms []*Term) Ref {
 		return ref
 	}
 	cpy := make(Ref, len(ref)+len(terms))
-	for i := range ref {
-		cpy[i] = ref[i]
-	}
+	copy(cpy, ref)
+
 	for i := range terms {
 		cpy[len(ref)+i] = terms[i]
 	}
