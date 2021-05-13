@@ -346,13 +346,6 @@ func (s *Scanner) next() {
 	}
 }
 
-func (s *Scanner) peek(i int) rune {
-	if s.offset+i < len(s.bs) {
-		return rune(s.bs[s.offset+i])
-	}
-	return 0
-}
-
 func (s *Scanner) literalStart() int {
 	// The current offset is at the first character past the literal delimiter (#, ", `, etc.)
 	// Need to subtract width of first character (plus one for the delimiter).

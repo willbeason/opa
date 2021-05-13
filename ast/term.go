@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"math/big"
 	"net/url"
 	"regexp"
@@ -111,15 +110,6 @@ func InterfaceToValue(x interface{}) (Value, error) {
 	}
 }
 
-// ValueFromReader returns an AST value from a JSON serialized value in the reader.
-func ValueFromReader(r io.Reader) (Value, error) {
-	var x interface{}
-	if err := util.NewJSONDecoder(r).Decode(&x); err != nil {
-		return nil, err
-	}
-	return InterfaceToValue(x)
-}
-
 // As converts v into a Go native type referred to by x.
 func As(v Value, x interface{}) error {
 	return util.NewJSONDecoder(bytes.NewBufferString(v.String())).Decode(x)
@@ -155,13 +145,6 @@ func (illegalResolver) Resolve(ref Ref) (interface{}, error) {
 	return nil, fmt.Errorf("illegal value: %v", ref)
 }
 
-// ValueToInterface returns the Go representation of an AST value.  The AST
-// value should not contain any values that require evaluation (e.g., vars,
-// comprehensions, etc.)
-func ValueToInterface(v Value, resolver Resolver) (interface{}, error) {
-	return valueToInterface(v, resolver, JSONOpt{})
-}
-
 func valueToInterface(v Value, resolver Resolver, opt JSONOpt) (interface{}, error) {
 	switch v := v.(type) {
 	case Null:
@@ -173,13 +156,13 @@ func valueToInterface(v Value, resolver Resolver, opt JSONOpt) (interface{}, err
 	case String:
 		return string(v), nil
 	case *Array:
-		buf := []interface{}{}
+		buf := make([]interface{}, v.Len())
 		for i := 0; i < v.Len(); i++ {
 			x1, err := valueToInterface(v.Elem(i).Value, resolver, opt)
 			if err != nil {
 				return nil, err
 			}
-			buf = append(buf, x1)
+			buf[i] = x1
 		}
 		return buf, nil
 	case *object:
@@ -251,18 +234,6 @@ type JSONOpt struct {
 // refs or terms that require evaluation (e.g., vars, comprehensions, etc.)
 func JSONWithOpt(v Value, opt JSONOpt) (interface{}, error) {
 	return valueToInterface(v, illegalResolver{}, opt)
-}
-
-// MustJSON returns the JSON representation of v. The value must not contain any
-// refs or terms that require evaluation (e.g., vars, comprehensions, etc.) If
-// the conversion fails, this function will panic. This function is mostly for
-// test purposes.
-func MustJSON(v Value) interface{} {
-	r, err := JSON(v)
-	if err != nil {
-		panic(err)
-	}
-	return r
 }
 
 // MustInterfaceToValue converts a native Go value x to a Value. If the
@@ -355,9 +326,9 @@ func (term *Term) Equal(other *Term) bool {
 	}
 
 	// TODO(tsandall): This early-exit avoids allocations for types that have
-	// Equal() functions that just use == underneath. We should revisit the
-	// other types and implement Equal() functions that do not require
-	// allocations.
+	//  Equal() functions that just use == underneath. We should revisit the
+	//  other types and implement Equal() functions that do not require
+	//  allocations.
 	switch v := term.Value.(type) {
 	case Null:
 		return v.Equal(other.Value)
@@ -824,11 +795,6 @@ func (v Var) String() string {
 // Ref represents a reference as defined by the language.
 type Ref []*Term
 
-// EmptyRef returns a new, empty reference.
-func EmptyRef() Ref {
-	return Ref([]*Term{})
-}
-
 // PtrRef returns a new reference against the head for the pointer
 // s. Path components in the pointer are unescaped.
 func PtrRef(head *Term, s string) (Ref, error) {
@@ -974,13 +940,13 @@ func (ref Ref) HasPrefix(other Ref) bool {
 
 // ConstantPrefix returns the constant portion of the ref starting from the head.
 func (ref Ref) ConstantPrefix() Ref {
-	ref = ref.Copy()
+	r := ref.Copy()
 
-	i := ref.Dynamic()
+	i := r.Dynamic()
 	if i < 0 {
-		return ref
+		return r
 	}
-	return ref[:i]
+	return r[:i]
 }
 
 // GroundPrefix returns the ground portion of the ref starting from the head. By
@@ -1233,10 +1199,10 @@ func (arr *Array) Until(f func(*Term) bool) bool {
 
 // Foreach calls f on each element in arr.
 func (arr *Array) Foreach(f func(*Term)) {
-	arr.Iter(func(t *Term) error {
+	_ = arr.Iter(func(t *Term) error {
 		f(t)
 		return nil
-	})
+	}) // impossible to return error
 }
 
 // Append appends a term to arr, returning the appended array.
@@ -1333,7 +1299,7 @@ func (s *set) String() string {
 	if s.Len() == 0 {
 		return "set()"
 	}
-	buf := []string{}
+	var buf []string
 	sorted := s.Sorted()
 	sorted.Foreach(func(x *Term) {
 		buf = append(buf, fmt.Sprint(x))
@@ -1443,10 +1409,10 @@ func (s *set) Until(f func(*Term) bool) bool {
 
 // Foreach calls f on each element in s.
 func (s *set) Foreach(f func(*Term)) {
-	s.Iter(func(t *Term) error {
+	_ = s.Iter(func(t *Term) error {
 		f(t)
 		return nil
-	})
+	}) // impossible to return error
 }
 
 // Map returns a new Set obtained by applying f to each value in s.
@@ -1882,7 +1848,7 @@ func (obj *object) Diff(other Object) Object {
 // between obj and other. For each intersecting key, the values from obj and other are included
 // as the last two terms in the triplet (respectively).
 func (obj *object) Intersect(other Object) [][3]*Term {
-	r := [][3]*Term{}
+	var r [][3]*Term
 	obj.Foreach(func(k, v *Term) {
 		if v2 := other.Get(k); v2 != nil {
 			r = append(r, [3]*Term{k, v, v2})
@@ -1917,10 +1883,10 @@ func (obj *object) Until(f func(*Term, *Term) bool) bool {
 
 // Foreach calls f for each key-value pair in the object.
 func (obj *object) Foreach(f func(*Term, *Term)) {
-	obj.Iter(func(k, v *Term) error {
+	_ = obj.Iter(func(k, v *Term) error {
 		f(k, v)
 		return nil
-	})
+	}) // impossible to return error
 }
 
 // Map returns a new Object constructed by mapping each element in the object
@@ -2600,11 +2566,9 @@ func unmarshalBody(b []interface{}) (Body, error) {
 				continue
 			}
 		}
-		goto unmarshal_error
+		return nil, fmt.Errorf("ast: unable to unmarshal body")
 	}
 	return buf, nil
-unmarshal_error:
-	return nil, fmt.Errorf("ast: unable to unmarshal body")
 }
 
 func unmarshalExpr(expr *Expr, v map[string]interface{}) error {
@@ -2672,7 +2636,7 @@ func unmarshalTerm(m map[string]interface{}) (*Term, error) {
 }
 
 func unmarshalTermSlice(s []interface{}) ([]*Term, error) {
-	buf := []*Term{}
+	var buf []*Term
 	for _, x := range s {
 		if m, ok := x.(map[string]interface{}); ok {
 			if t, err := unmarshalTerm(m); err == nil {
@@ -2762,7 +2726,7 @@ func unmarshalValue(d map[string]interface{}) (Value, error) {
 						continue
 					}
 				}
-				goto unmarshal_error
+				break
 			}
 			return buf, nil
 		}
@@ -2770,22 +2734,22 @@ func unmarshalValue(d map[string]interface{}) (Value, error) {
 		if m, ok := v.(map[string]interface{}); ok {
 			t, ok := m["term"].(map[string]interface{})
 			if !ok {
-				goto unmarshal_error
+				break
 			}
 
 			term, err := unmarshalTerm(t)
 			if err != nil {
-				goto unmarshal_error
+				break
 			}
 
 			b, ok := m["body"].([]interface{})
 			if !ok {
-				goto unmarshal_error
+				break
 			}
 
 			body, err := unmarshalBody(b)
 			if err != nil {
-				goto unmarshal_error
+				break
 			}
 
 			if d["type"] == "arraycomprehension" {
@@ -2797,32 +2761,32 @@ func unmarshalValue(d map[string]interface{}) (Value, error) {
 		if m, ok := v.(map[string]interface{}); ok {
 			k, ok := m["key"].(map[string]interface{})
 			if !ok {
-				goto unmarshal_error
+				break
 			}
 
 			key, err := unmarshalTerm(k)
 			if err != nil {
-				goto unmarshal_error
+				break
 			}
 
 			v, ok := m["value"].(map[string]interface{})
 			if !ok {
-				goto unmarshal_error
+				break
 			}
 
 			value, err := unmarshalTerm(v)
 			if err != nil {
-				goto unmarshal_error
+				break
 			}
 
 			b, ok := m["body"].([]interface{})
 			if !ok {
-				goto unmarshal_error
+				break
 			}
 
 			body, err := unmarshalBody(b)
 			if err != nil {
-				goto unmarshal_error
+				break
 			}
 
 			return &ObjectComprehension{Key: key, Value: value, Body: body}, nil
@@ -2832,6 +2796,5 @@ func unmarshalValue(d map[string]interface{}) (Value, error) {
 			return Call(s), nil
 		}
 	}
-unmarshal_error:
 	return nil, fmt.Errorf("ast: unable to unmarshal term")
 }

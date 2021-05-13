@@ -214,8 +214,6 @@ type QueryCompilerStageDefinition struct {
 	Stage      QueryCompilerStage
 }
 
-const compileStageMetricPrefex = "ast_compile_stage_"
-
 // NewCompiler returns a new empty compiler.
 func NewCompiler() *Compiler {
 
@@ -821,13 +819,13 @@ func (c *Compiler) checkSafetyRuleBodies() {
 		WalkRules(m, func(r *Rule) bool {
 			safe := ReservedVars.Copy()
 			safe.Update(r.Head.Args.Vars())
-			r.Body = c.checkBodySafety(safe, m, r.Body)
+			r.Body = c.checkBodySafety(safe, r.Body)
 			return false
 		})
 	}
 }
 
-func (c *Compiler) checkBodySafety(safe VarSet, m *Module, b Body) Body {
+func (c *Compiler) checkBodySafety(safe VarSet, b Body) Body {
 	reordered, unsafe := reorderBodyForSafety(c.builtins, c.GetArity, safe, b)
 	if errs := safetyErrorSlice(unsafe); len(errs) > 0 {
 		for _, err := range errs {
@@ -1139,8 +1137,9 @@ func (c *Compiler) rewriteComprehensionTerms() {
 	f := newEqualityFactory(c.localvargen)
 	for _, name := range c.sorted {
 		mod := c.Modules[name]
-		rewriteComprehensionTerms(f, mod)
+		_, _ = rewriteComprehensionTerms(f, mod) // ignore error
 	}
+	return
 }
 
 func (c *Compiler) rewriteExprTerms() {
@@ -1434,7 +1433,7 @@ func (c *Compiler) rewriteWithModifiers() {
 
 			return body, nil
 		})
-		Transform(t, mod)
+		_, _ = Transform(t, mod) // ignore error
 	}
 }
 
@@ -1850,7 +1849,7 @@ type comprehensionIndexRegressionCheckVisitor struct {
 	worse      bool
 }
 
-// TOOD(tsandall): Improve this so that users can either supply this list explicitly
+// TODO(tsandall): Improve this so that users can either supply this list explicitly
 // or the information is maintained on the built-in function declaration. What we really
 // need to know is whether the built-in function allows callers to push down output
 // values or not. It's unlikely that anything outside of OPA does this today so this
@@ -1901,7 +1900,6 @@ func (vis *comprehensionIndexRegressionCheckVisitor) assertEmptyIntersection(vs 
 
 type comprehensionIndexNestedCandidateVisitor struct {
 	candidates VarSet
-	nested     bool
 	found      bool
 }
 
@@ -2144,7 +2142,7 @@ func (g *Graph) Sort() (sorted []util.T, ok bool) {
 		return g.sorted, true
 	}
 
-	sort := &graphSort{
+	sorter := &graphSort{
 		sorted: make([]util.T, 0, len(g.nodes)),
 		deps:   g.Dependencies,
 		marked: map[util.T]struct{}{},
@@ -2152,12 +2150,12 @@ func (g *Graph) Sort() (sorted []util.T, ok bool) {
 	}
 
 	for node := range g.nodes {
-		if !sort.Visit(node) {
+		if !sorter.Visit(node) {
 			return nil, false
 		}
 	}
 
-	g.sorted = sort.sorted
+	g.sorted = sorter.sorted
 	return g.sorted, true
 }
 
@@ -3074,7 +3072,7 @@ func rewriteEquals(x interface{}) {
 		}
 		return x, nil
 	})
-	Transform(t, x)
+	_, _ = Transform(t, x) // ignore error
 }
 
 // rewriteDynamics will rewrite the body so that dynamic terms (i.e., refs and
@@ -3497,7 +3495,7 @@ func rewriteLocalVars(g *localVarGenerator, stack *localDeclaredVars, used VarSe
 
 func rewriteDeclaredVarsInBody(g *localVarGenerator, stack *localDeclaredVars, used VarSet, body Body, errs Errors) (Body, Errors) {
 
-	var cpy Body
+	cpy := Body{}
 
 	for i := range body {
 		var expr *Expr
@@ -3757,7 +3755,7 @@ func rewriteDeclaredVar(g *localVarGenerator, stack *localDeclaredVars, v Var, o
 // not contain terms that require evaluation as values. If this function
 // encounters an invalid with modifier target then it will raise an error.
 func rewriteWithModifiersInBody(c *Compiler, f *equalityFactory, body Body) (Body, *Error) {
-	var result Body
+	result := Body{}
 	for i := range body {
 		exprs, err := rewriteWithModifier(c, f, body[i])
 		if err != nil {
