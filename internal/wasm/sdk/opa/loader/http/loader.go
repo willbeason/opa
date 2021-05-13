@@ -62,7 +62,7 @@ func New(o *opa.OPA) *Loader {
 	return new(o)
 }
 
-// new constucts a new HTTP loader. This is for tests.
+// new constructs a new HTTP loader. This is for tests.
 func new(pd policyData) *Loader {
 	return &Loader{
 		pd:             pd,
