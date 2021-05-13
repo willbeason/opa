@@ -307,6 +307,9 @@ func TestTopDownJWTEncodeSignES256(t *testing.T) {
 		t.Fatal("Failed to create private key")
 	}
 	publicKey, err := jwk.GetPublicKey(key)
+	if err != nil {
+		t.Fatalf("failed to get public key: %v", err)
+	}
 
 	// Verify with vendor library
 

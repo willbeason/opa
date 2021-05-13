@@ -2701,11 +2701,7 @@ func canInlineNegation(safe ast.VarSet, queries []ast.Body) bool {
 	// NOTE(tsandall): this limit is arbitrary–it's only in place to prevent the
 	// partial evaluation result from blowing up. In the future, we could make this
 	// configurable or do something more clever.
-	if size > 16 {
-		return false
-	}
-
-	return true
+	return size <= 16
 }
 
 type nestedCheckVisitor struct {

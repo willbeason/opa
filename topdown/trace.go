@@ -196,10 +196,7 @@ func NewBufferTracer() *BufferTracer {
 
 // Enabled always returns true if the BufferTracer is instantiated.
 func (b *BufferTracer) Enabled() bool {
-	if b == nil {
-		return false
-	}
-	return true
+	return b != nil
 }
 
 // Trace adds the event to the buffer.

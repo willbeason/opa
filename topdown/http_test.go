@@ -208,7 +208,6 @@ func echoCustomHeaders(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	_ = json.NewEncoder(w).Encode(headers)
-	return
 }
 
 // TestHTTPSendCustomRequestHeaders adds custom headers to request
@@ -757,11 +756,6 @@ func TestHTTPSendRaiseError(t *testing.T) {
 }
 
 func TestHTTPSendCaching(t *testing.T) {
-	// expected result
-	var body []interface{}
-	bodyMap := map[string]string{"id": "1", "firstname": "John"}
-	body = append(body, bodyMap)
-
 	// run the test
 	tests := []struct {
 		note             string
