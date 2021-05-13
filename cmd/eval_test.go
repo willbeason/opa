@@ -249,7 +249,7 @@ func testEvalWithSchemaFile(t *testing.T, input string, query string, schema str
 	return err
 }
 
-func testEvalWithInvalidSchemaFile(t *testing.T, input string, query string, schema string) error {
+func testEvalWithInvalidSchemaFile(input string, query string, schema string) error {
 	files := map[string]string{
 		"input.json":  input,
 		"schema.json": schema,
@@ -288,9 +288,10 @@ func testReadParamWithSchemaDir(t *testing.T, input string, query string, inputS
 		params.inputPath = filepath.Join(path, "input.json")
 		params.schemaPath = filepath.Join(path, "schemas")
 
-		schemaSet, err := loader.Schemas(params.schemaPath)
-		if err != nil {
-			err = fmt.Errorf("Unexpected error or undefined from evaluation: %v", err)
+		// Don't assign over "err" or "err =" does nothing.
+		schemaSet, errSchema := loader.Schemas(params.schemaPath)
+		if errSchema != nil {
+			err = fmt.Errorf("Unexpected error or undefined from evaluation: %v", errSchema)
 			return
 		}
 
@@ -427,7 +428,7 @@ func TestEvalWithInvalidSchemaFile(t *testing.T) {
 		t.Fatalf("expected error but err == nil")
 	}
 
-	err = testEvalWithInvalidSchemaFile(t, input, query, schema)
+	err = testEvalWithInvalidSchemaFile(input, query, schema)
 	if err == nil {
 		t.Fatalf("expected error but err == nil")
 	}

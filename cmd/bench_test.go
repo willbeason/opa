@@ -452,7 +452,10 @@ func TestRenderBenchmarkErrorJSONOutput(t *testing.T) {
 
 	_, err := ast.ParseBody("???")
 
-	renderBenchmarkError(params, err, &buf)
+	err = renderBenchmarkError(params, err, &buf)
+	if err != nil {
+		t.Fatalf("Unexpected error %v", err)
+	}
 
 	actual := buf.String()
 	expected := `{
@@ -498,7 +501,10 @@ func testPrettyBenchmarkOutput(t *testing.T, params benchmarkCommandParams) {
 
 	_, err := ast.ParseBody("???")
 
-	renderBenchmarkError(params, err, &buf)
+	err = renderBenchmarkError(params, err, &buf)
+	if err != nil {
+		t.Fatalf("Unexpected error %v", err)
+	}
 
 	actual := buf.String()
 	expected := `1 error occurred: 1:1: rego_parse_error: illegal token

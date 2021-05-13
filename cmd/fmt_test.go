@@ -178,7 +178,7 @@ p {
 		info, err := os.Stat(policyFile)
 		err = formatFile(&params, io.Discard, policyFile, info, err)
 		if err != nil {
-			t.Fatalf("Expected error but did not recieve one")
+			t.Fatalf("Expected error but did not receive one")
 		}
 	})
 }

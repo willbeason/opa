@@ -1377,7 +1377,7 @@ func TestPluginReconfigure(t *testing.T) {
 		})
 	}
 	if len(stages) != updateCount {
-		t.Fatalf("Expected to have recieved %d updates, got %d", len(stages), updateCount)
+		t.Fatalf("Expected to have received %d updates, got %d", len(stages), updateCount)
 	}
 }
 
