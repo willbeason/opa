@@ -52,7 +52,6 @@ type evalCommandParams struct {
 	ignore              []string
 	outputFormat        *util.EnumFlag
 	profile             bool
-	profileTopResults   bool
 	profileCriteria     repeatedStringFlag
 	profileLimit        intFlag
 	prettyLimit         intFlag
