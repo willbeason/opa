@@ -23,7 +23,6 @@ import (
 	"github.com/open-policy-agent/opa/logging"
 )
 
-// nolint: gosec // These defaults come from the AWS tutorials.
 const (
 	// ref. https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html
 	ec2DefaultCredServicePath = "http://169.254.169.254/latest/meta-data/iam/security-credentials/"

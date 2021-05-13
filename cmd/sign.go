@@ -260,7 +260,6 @@ func writeTokenToFile(token, fileLoc string) error {
 	if fileLoc != "" {
 		path = filepath.Join(fileLoc, path)
 	}
-	// nolint: gosec // We want to be more permissive than 0600 permissions.
 	return ioutil.WriteFile(path, bs, 0644)
 }
 
