@@ -2,6 +2,7 @@
 // Use of this source code is governed by an Apache2
 // license that can be found in the LICENSE file.
 
+// nolint: goconst // string duplication is for test readability.
 package cmd
 
 import (
@@ -274,7 +275,7 @@ func testEvalWithInvalidSchemaFile(input string, query string, schema string) er
 	return err
 }
 
-func testReadParamWithSchemaDir(t *testing.T, input string, query string, inputSchema string) error {
+func testReadParamWithSchemaDir(input string, inputSchema string) error {
 	files := map[string]string{
 		"input.json":                          input,
 		"schemas/input.json":                  inputSchema,
@@ -401,7 +402,7 @@ func TestEvalWithJSONSchema(t *testing.T) {
 		t.Fatalf("unexpected error: %s", err)
 	}
 
-	err = testReadParamWithSchemaDir(t, input, query, schema)
+	err = testReadParamWithSchemaDir(input, schema)
 	if err != nil {
 		t.Fatalf("unexpected error: %s", err)
 	}

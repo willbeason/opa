@@ -2,24 +2,21 @@
 // Use of this source code is governed by an Apache2
 // license that can be found in the LICENSE file.
 
+// nolint: gosec // Test credentials.
 package cmd
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-
-	"github.com/open-policy-agent/opa/keys"
-
-	"github.com/open-policy-agent/opa/internal/file/archive"
-
-	"github.com/open-policy-agent/opa/bundle"
-
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
 
+	"github.com/open-policy-agent/opa/bundle"
+	"github.com/open-policy-agent/opa/internal/file/archive"
+	"github.com/open-policy-agent/opa/keys"
 	"github.com/open-policy-agent/opa/util/test"
 )
 

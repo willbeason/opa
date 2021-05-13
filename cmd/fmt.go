@@ -193,6 +193,7 @@ func doDiff(old, new []byte) (stdout, stderr bytes.Buffer, err error) {
 	o.Write(old)
 	n.Write(new)
 
+	// nolint: gosec // Accepting variables here is required.
 	cmd := exec.Command("diff", "-u", o.Name(), n.Name())
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
