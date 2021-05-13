@@ -103,7 +103,7 @@ func TestRoundTrip(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Message verification failed: %s", err.Error())
 			}
-			if bytes.Equal(payload, verified) {
+			if !bytes.Equal(payload, verified) {
 				t.Fatalf("Mismatched payload (%s):(%s)", payload, verified)
 			}
 		})
@@ -140,7 +140,7 @@ func TestVerifyWithJWKSet(t *testing.T) {
 		t.Fatalf("Failed to verify with JWK: %s", err.Error())
 	}
 
-	if bytes.Equal(payload, verified) {
+	if !bytes.Equal(payload, verified) {
 		t.Fatalf("Mismatched payload (%s):(%s)", payload, verified)
 	}
 }
@@ -163,7 +163,7 @@ func TestRoundtrip_RSACompact(t *testing.T) {
 			t.Fatalf("Failed to verify signature: %s", err.Error())
 		}
 
-		if bytes.Equal(payload, verified) {
+		if !bytes.Equal(payload, verified) {
 			t.Fatalf("Mismatched payloads (%s):(%s)", payload, verified)
 		}
 	}

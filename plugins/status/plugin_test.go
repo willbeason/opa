@@ -90,7 +90,6 @@ func TestPluginStartBulkUpdate(t *testing.T) {
 
 	// Start will trigger a status update when the plugin state switches
 	// from "not ready" to "ok".
-	result := <-fixture.server.ch
 
 	exp := UpdateRequestV1{
 		Labels: map[string]string{
@@ -106,7 +105,8 @@ func TestPluginStartBulkUpdate(t *testing.T) {
 	status := testStatus()
 
 	fixture.plugin.BulkUpdateBundleStatus(map[string]*bundle.Status{status.Name: status})
-	result = <-fixture.server.ch
+	<-fixture.server.ch // Discard first request.
+	result := <-fixture.server.ch
 
 	exp.Bundles = map[string]*bundle.Status{status.Name: status}
 
