@@ -19,13 +19,13 @@ const bom = 0xFEFF
 // Scanner is used to tokenize an input stream of
 // Rego source code.
 type Scanner struct {
-	offset   int
-	row      int
-	col      int
-	bs       []byte
-	curr     rune
-	width    int
-	errors   []Error
+	offset int
+	row    int
+	col    int
+	bs     []byte
+	curr   rune
+	width  int
+	errors []Error
 }
 
 // Error represents a scanner error.
