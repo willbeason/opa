@@ -167,7 +167,7 @@ func (q *Query) WithPartialNamespace(ns string) *Query {
 }
 
 // WithSkipPartialNamespace disables namespacing of saved support rules that are generated
-// from the original policy (rules which are completely syntethic are still namespaced.)
+// from the original policy (rules which are completely synthetic are still namespaced.)
 func (q *Query) WithSkipPartialNamespace(yes bool) *Query {
 	q.skipSaveNamespace = yes
 	return q

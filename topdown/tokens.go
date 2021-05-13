@@ -37,6 +37,10 @@ var (
 	jwtAudKey = ast.StringTerm("aud")
 )
 
+const (
+	HeaderJwt = "JWT"
+)
+
 // JSONWebToken represent the 3 parts (header, payload & signature) of
 //              a JWT in Base64.
 type JSONWebToken struct {
@@ -90,7 +94,7 @@ func builtinJWTDecode(a ast.Value) (ast.Value, error) {
 		// When the payload is itself another encoded JWT, then its
 		// contents are quoted (behavior of https://jwt.io/). To fix
 		// this, remove leading and trailing quotes.
-		if ctyVal == "JWT" {
+		if ctyVal == HeaderJwt {
 			p, err = builtinTrim(p, ast.String(`"'`))
 			if err != nil {
 				panic("not reached")
@@ -273,7 +277,7 @@ func getKeyFromCertOrJWK(certificate string) ([]interface{}, error) {
 			return nil, fmt.Errorf("extra data after a PEM certificate block")
 		}
 
-		if block.Type == "CERTIFICATE" {
+		if block.Type == BlockTypeCertificate {
 			cert, err := x509.ParseCertificate(block.Bytes)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to parse a PEM certificate")
@@ -841,7 +845,7 @@ func commonBuiltinJWTEncodeSign(inputHeaders, jwsPayload, jwkSrc string) (ast.Va
 	}
 	alg := standardHeaders.GetAlgorithm()
 
-	if (standardHeaders.Type == "" || standardHeaders.Type == "JWT") && !json.Valid([]byte(jwsPayload)) {
+	if (standardHeaders.Type == "" || standardHeaders.Type == HeaderJwt) && !json.Valid([]byte(jwsPayload)) {
 		return nil, fmt.Errorf("type is JWT but payload is not JSON")
 	}
 
@@ -952,7 +956,7 @@ func builtinJWTDecodeVerify(bctx BuiltinContext, args []*ast.Term, iter func(*as
 			return fmt.Errorf("JWT payload had invalid encoding: %v", err)
 		}
 		// RFC7159 7.2 #8 and 5.2 cty
-		if strings.ToUpper(header.cty) == "JWT" {
+		if strings.ToUpper(header.cty) == HeaderJwt {
 			// Nested JWT, go round again with payload as first argument
 			a = p
 			continue

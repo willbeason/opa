@@ -2,6 +2,7 @@
 // Use of this source code is governed by an Apache2
 // license that can be found in the LICENSE file.
 
+// nolint: goconst // string duplication is for test readability.
 package topdown
 
 import (
@@ -49,7 +50,7 @@ func TestHTTPGetRequest(t *testing.T) {
 		headers := w.Header()
 		headers["test-header"] = []string{"test-value"}
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(people)
+		_ = json.NewEncoder(w).Encode(people)
 	}))
 
 	defer ts.Close()
@@ -105,7 +106,7 @@ func TestHTTPGetRequestTlsInsecureSkipVerify(t *testing.T) {
 	// test server
 	ts := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(people)
+		_ = json.NewEncoder(w).Encode(people)
 	}))
 	defer ts.Close()
 
@@ -206,7 +207,7 @@ func echoCustomHeaders(w http.ResponseWriter, r *http.Request) {
 			headers[k] = v
 		}
 	}
-	json.NewEncoder(w).Encode(headers)
+	_ = json.NewEncoder(w).Encode(headers)
 	return
 }
 
@@ -269,7 +270,7 @@ func TestHTTPHostHeader(t *testing.T) {
 	// test server
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(r.Host)
+		_ = json.NewEncoder(w).Encode(r.Host)
 	}))
 
 	defer ts.Close()
@@ -315,7 +316,10 @@ func TestHTTPPostRequest(t *testing.T) {
 
 		w.Header().Set("Content-Type", contentType)
 		w.WriteHeader(http.StatusOK)
-		w.Write(bs)
+		_, err = w.Write(bs)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}))
 
 	defer ts.Close()
@@ -434,7 +438,7 @@ func TestHTTPDeleteRequest(t *testing.T) {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(people)
+		_ = json.NewEncoder(w).Encode(people)
 	}))
 
 	defer ts.Close()
@@ -462,7 +466,7 @@ func TestHTTPDeleteRequest(t *testing.T) {
 	// delete a new person
 	personToDelete := Person{ID: "2", Firstname: "Joe"}
 	b := new(bytes.Buffer)
-	json.NewEncoder(b).Encode(personToDelete)
+	_ = json.NewEncoder(b).Encode(personToDelete)
 
 	// run the test
 	tests := []struct {
@@ -858,7 +862,10 @@ func TestHTTPSendCaching(t *testing.T) {
 			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				requests = append(requests, r)
 				w.WriteHeader(http.StatusOK)
-				w.Write([]byte(tc.response))
+				_, err := w.Write([]byte(tc.response))
+				if err != nil {
+					t.Fatal(err)
+				}
 			}))
 			defer ts.Close()
 
@@ -1023,7 +1030,7 @@ func TestHTTPSendInterQueryCaching(t *testing.T) {
 				} else {
 					w.WriteHeader(http.StatusOK)
 				}
-				w.Write([]byte(tc.response))
+				_, _ = w.Write([]byte(tc.response)) // ignore error
 			}))
 			defer ts.Close()
 
@@ -1149,7 +1156,10 @@ func TestHTTPSendInterQueryForceCaching(t *testing.T) {
 				headers.Set("Date", t0.Format(time.RFC850))
 
 				w.WriteHeader(http.StatusOK)
-				w.Write([]byte(tc.response))
+				_, err := w.Write([]byte(tc.response))
+				if err != nil {
+					t.Fatal(err)
+				}
 			}))
 			defer ts.Close()
 
@@ -1232,7 +1242,7 @@ func TestHTTPSendInterQueryCachingModifiedResp(t *testing.T) {
 				} else {
 					w.WriteHeader(http.StatusOK)
 				}
-				w.Write([]byte(tc.response))
+				_, _ = w.Write([]byte(tc.response)) // ignore error
 			}))
 			defer ts.Close()
 
@@ -1298,7 +1308,10 @@ func TestHTTPSendInterQueryCachingNewResp(t *testing.T) {
 					}
 				}
 				w.WriteHeader(http.StatusOK)
-				w.Write([]byte(tc.response))
+				_, err := w.Write([]byte(tc.response))
+				if err != nil {
+					t.Fatal(err)
+				}
 			}))
 			defer ts.Close()
 
@@ -1364,7 +1377,10 @@ func TestInsertIntoHTTPSendInterQueryCacheError(t *testing.T) {
 				}
 
 				w.WriteHeader(http.StatusOK)
-				w.Write([]byte(tc.response))
+				_, err := w.Write([]byte(tc.response))
+				if err != nil {
+					t.Fatal(err)
+				}
 			}))
 			defer ts.Close()
 
@@ -1698,7 +1714,7 @@ func getTLSTestServer() (ts *httptest.Server) {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		w.Write(js)
+		_, _ = w.Write(js)
 	})
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {

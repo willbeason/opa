@@ -31,6 +31,7 @@ import (
 	"time"
 
 	"github.com/open-policy-agent/opa/keys"
+	"github.com/open-policy-agent/opa/topdown"
 
 	"github.com/open-policy-agent/opa/bundle"
 	"github.com/open-policy-agent/opa/internal/jwx/jwa"
@@ -1807,7 +1808,7 @@ func createCert(template, parent *x509.Certificate, pub interface{}, parentPriv 
 		return
 	}
 	// PEM encode the certificate (this is a standard TLS encoding)
-	b := pem.Block{Type: "CERTIFICATE", Bytes: certDER}
+	b := pem.Block{Type: topdown.BlockTypeCertificate, Bytes: certDER}
 	certPEM = pem.EncodeToMemory(&b)
 	return
 }
