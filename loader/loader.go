@@ -100,20 +100,12 @@ func NewFileLoader() FileLoader {
 	}
 }
 
-type descriptor struct {
-	result  *Result
-	path    string
-	relPath string
-	depth   int
-}
-
 type fileLoader struct {
-	metrics     metrics.Metrics
-	bvc         *bundle.VerificationConfig
-	skipVerify  bool
-	descriptors []*descriptor
-	files       map[string]bundle.FileInfo
-	opts        ast.ParserOptions
+	metrics    metrics.Metrics
+	bvc        *bundle.VerificationConfig
+	skipVerify bool
+	files      map[string]bundle.FileInfo
+	opts       ast.ParserOptions
 }
 
 // WithMetrics provides the metrics instance to use while loading
@@ -238,7 +230,7 @@ func GetBundleDirectoryLoader(path string) (bundle.DirectoryLoader, bool, error)
 // paths while applying the given filters. If any filter returns true, the
 // file/directory is excluded.
 func FilteredPaths(paths []string, filter Filter) ([]string, error) {
-	result := []string{}
+	var result []string
 
 	_, err := all(paths, filter, func(_ *Result, path string, _ int) error {
 		result = append(result, path)
@@ -253,7 +245,7 @@ func FilteredPaths(paths []string, filter Filter) ([]string, error) {
 // Schemas loads a schema set from the specified file path.
 func Schemas(schemaPath string) (*ast.SchemaSet, error) {
 
-	var errs Errors
+	errs := Errors{}
 	ss, err := loadSchemas(schemaPath)
 	if err != nil {
 		errs.add(err)
@@ -373,14 +365,6 @@ func All(paths []string) (*Result, error) {
 // Deprecated: Use FileLoader.Filtered() instead.
 func Filtered(paths []string, filter Filter) (*Result, error) {
 	return NewFileLoader().Filtered(paths, filter)
-}
-
-// AsBundle loads a path as a bundle. If it is a single file
-// it will be treated as a normal tarball bundle. If a directory
-// is supplied it will be loaded as an unzipped bundle tree.
-// Deprecated: Use FileLoader.AsBundle() instead.
-func AsBundle(path string) (*bundle.Bundle, error) {
-	return NewFileLoader().AsBundle(path)
 }
 
 // AllRegos returns a Result object loaded (recursively) with all Rego source
@@ -519,7 +503,7 @@ func newResult() *Result {
 }
 
 func all(paths []string, filter Filter, f func(*Result, string, int) error) (*Result, error) {
-	errors := Errors{}
+	errs := Errors{}
 	root := newResult()
 
 	for _, path := range paths {
@@ -535,11 +519,11 @@ func all(paths []string, filter Filter, f func(*Result, string, int) error) (*Re
 			}
 		}
 
-		allRec(path, filter, &errors, loaded, 0, f)
+		allRec(path, filter, &errs, loaded, 0, f)
 	}
 
-	if len(errors) > 0 {
-		return nil, errors
+	if len(errs) > 0 {
+		return nil, errs
 	}
 
 	return root, nil
