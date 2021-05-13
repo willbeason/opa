@@ -37,7 +37,7 @@ type Config struct {
 	Name                         string            `json:"name"`
 	URL                          string            `json:"url"`
 	Headers                      map[string]string `json:"headers"`
-	AllowInsureTLS               bool              `json:"allow_insecure_tls,omitempty"`
+	AllowInsecureTLS             bool              `json:"allow_insecure_tls,omitempty"`
 	ResponseHeaderTimeoutSeconds *int64            `json:"response_header_timeout_seconds,omitempty"`
 	Credentials                  struct {
 		Bearer      *bearerAuthPlugin                  `json:"bearer,omitempty"`

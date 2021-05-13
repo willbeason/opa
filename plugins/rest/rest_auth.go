@@ -42,7 +42,7 @@ func DefaultTLSConfig(c Config) (*tls.Config, error) {
 		return nil, err
 	}
 	if url.Scheme == "https" {
-		t.InsecureSkipVerify = c.AllowInsureTLS
+		t.InsecureSkipVerify = c.AllowInsecureTLS
 	}
 	return t, nil
 }
@@ -242,7 +242,7 @@ func (ap *oauth2ClientCredentialsAuthPlugin) NewClient(c Config) (*http.Client, 
 	}
 
 	// Inherit skip verify from the "parent" settings. Should this be configurable on the credentials too?
-	ap.tlsSkipVerify = c.AllowInsureTLS
+	ap.tlsSkipVerify = c.AllowInsecureTLS
 
 	ap.logger = c.logger
 
