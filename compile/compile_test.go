@@ -360,12 +360,15 @@ func TestCompilerOptimizationL1(t *testing.T) {
 		// here. If this becomes a common pattern, we could refactor (e.g.,
 		// allow caller to control var prefix, split into a reusable function,
 		// etc.)
-		ast.TransformVars(optimizedExp, func(x ast.Var) (ast.Value, error) {
+		_, err = ast.TransformVars(optimizedExp, func(x ast.Var) (ast.Value, error) {
 			if x == ast.Var("X") {
 				return ast.Var("$_term_1_01"), nil
 			}
 			return x, nil
 		})
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		if len(compiler.bundle.Modules) != 1 {
 			t.Fatalf("expected 1 module but got: %v", compiler.bundle.Modules)
