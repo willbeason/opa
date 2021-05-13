@@ -3,6 +3,7 @@
 // license that can be found in the LICENSE file.
 
 // Package wasm contains an IR->WASM compiler backend.
+// nolint: deadcode,varcheck // Package in development (2021).
 package wasm
 
 import (
@@ -800,12 +801,6 @@ func (c *Compiler) compileFunc(fn *ir.Func) error {
 			Count: c.nextLocal,
 			Type:  types.I32,
 		},
-	}
-
-	var params []types.ValueType
-
-	for i := 0; i < len(fn.Params); i++ {
-		params = append(params, types.I32)
 	}
 
 	return c.storeFunc(fn.Name, c.code)
