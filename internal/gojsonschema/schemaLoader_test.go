@@ -34,7 +34,7 @@ func TestSchemaLoaderWithReferenceToAddedSchema(t *testing.T) {
 	assert.Nil(t, err)
 	result, err := schema.Validate(NewStringLoader(`"hello"`))
 	assert.Nil(t, err)
-	if len(result.Errors()) != 1 || result.Errors()[0].Type() != "invalid_type" {
+	if len(result.Errors()) != 1 || result.Errors()[0].Type() != errInvalidType {
 		t.Errorf("Expected invalid type erorr, instead got %v", result.Errors())
 	}
 }
@@ -61,7 +61,7 @@ func TestCrossReference(t *testing.T) {
 	assert.Nil(t, err)
 	result, err := schema.Validate(NewStringLoader(`"hello"`))
 	assert.Nil(t, err)
-	if len(result.Errors()) != 1 || result.Errors()[0].Type() != "invalid_type" {
+	if len(result.Errors()) != 1 || result.Errors()[0].Type() != errInvalidType {
 		t.Errorf("Expected invalid type erorr, instead got %v", result.Errors())
 	}
 }

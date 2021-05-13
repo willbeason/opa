@@ -38,8 +38,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const displayErrorMessages = false
-
 const circularReference = `{
 	"type": "object",
 	"properties": {
@@ -267,7 +265,7 @@ func TestFragmentLoader(t *testing.T) {
 	result, err = schema.Validate(invalidDocument)
 
 	if assert.Nil(t, err, "Unexpected error while validating document: %T", err) {
-		if len(result.Errors()) != 1 || result.Errors()[0].Type() != "invalid_type" {
+		if len(result.Errors()) != 1 || result.Errors()[0].Type() != errInvalidType {
 			t.Errorf("Got invalid validation result.")
 		}
 	}

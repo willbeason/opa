@@ -210,6 +210,8 @@ type (
 	}
 )
 
+const errInvalidType = "invalid_type"
+
 // newError takes a ResultError type and sets the type, context, description, details, value, and field
 func newError(err ResultError, context *JSONContext, value interface{}, locale locale, details ErrorDetails) {
 	var t string
@@ -222,7 +224,7 @@ func newError(err ResultError, context *JSONContext, value interface{}, locale l
 		t = "required"
 		d = locale.Required()
 	case *InvalidTypeError:
-		t = "invalid_type"
+		t = errInvalidType
 		d = locale.InvalidType()
 	case *NumberAnyOfError:
 		t = "number_any_of"

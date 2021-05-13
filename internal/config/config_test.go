@@ -2,6 +2,7 @@
 // Use of this source code is governed by an Apache2
 // license that can be found in the LICENSE file.
 
+// nolint: goconst // string duplication is for test readability.
 package config
 
 import (
@@ -30,7 +31,7 @@ func TestSubEnvVarsVarsSubOne(t *testing.T) {
 
 	actual := subEnvVars(configYaml)
 
-	if string(actual) != expected {
+	if actual != expected {
 		t.Errorf("Expected: '%s'\nActual: '%s'", expected, actual)
 	}
 }
