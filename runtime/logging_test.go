@@ -220,7 +220,7 @@ func TestPrettyFormatterMultilineJSONFields(t *testing.T) {
 
 	expectedJSON, err := json.MarshalIndent(&obj, "      ", "  ")
 	if err != nil {
-		t.Fatalf("Unexpected error")
+		t.Fatalf("Unexpected error: %v", err)
 	}
 
 	if !strings.Contains(actualStr, string(expectedJSON)) {
