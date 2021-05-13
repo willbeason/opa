@@ -1342,7 +1342,10 @@ func (r *Rego) compileWasm(modules []*ast.Module, queries []ast.Body, qType quer
 	if r.dump != nil {
 		fmt.Fprintln(r.dump, "PLAN:")
 		fmt.Fprintln(r.dump, "-----")
-		ir.Pretty(r.dump, policy)
+		err = ir.Pretty(r.dump, policy)
+		if err != nil {
+			return nil, err
+		}
 		fmt.Fprintln(r.dump)
 	}
 

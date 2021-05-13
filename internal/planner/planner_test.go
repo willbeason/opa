@@ -358,7 +358,10 @@ q = 2`,
 				t.Fatal(err)
 			}
 			if testing.Verbose() {
-				ir.Pretty(os.Stderr, policy)
+				err = ir.Pretty(os.Stderr, policy)
+				if err != nil {
+					t.Fatal(err)
+				}
 			}
 		})
 	}
@@ -643,7 +646,10 @@ a {
 				t.Fatal(err)
 			}
 			if testing.Verbose() {
-				ir.Pretty(os.Stderr, policy)
+				err = ir.Pretty(os.Stderr, policy)
+				if err != nil {
+					t.Fatal(err)
+				}
 			}
 			start := interface{}(policy)
 			if tc.where != nil {
@@ -685,7 +691,10 @@ func TestMultipleNamedQueries(t *testing.T) {
 	}
 
 	if testing.Verbose() {
-		ir.Pretty(os.Stderr, policy)
+		err = ir.Pretty(os.Stderr, policy)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	// Consistency check to make sure two expected plans are emitted.

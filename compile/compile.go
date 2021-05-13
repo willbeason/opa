@@ -446,7 +446,10 @@ func (c *Compiler) compileWasm(ctx context.Context) error {
 	}
 
 	// dump policy IR (if "debug" wasn't requested, debug.Witer will discard it)
-	ir.Pretty(c.debug.Writer(), policy)
+	err = ir.Pretty(c.debug.Writer(), policy)
+	if err != nil {
+		return err
+	}
 
 	// Compile the policy into a wasm binary.
 	m, err := compiler.WithPolicy(policy).WithDebug(c.debug.Writer()).Compile()

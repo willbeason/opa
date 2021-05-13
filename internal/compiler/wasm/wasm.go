@@ -1149,7 +1149,10 @@ func (c *Compiler) compileBlock(block *ir.Block) ([]instruction.Instruction, err
 			instrs = append(instrs, instruction.Call{Index: c.function(opaSetAdd)})
 		default:
 			var buf bytes.Buffer
-			ir.Pretty(&buf, stmt)
+			err := ir.Pretty(&buf, stmt)
+			if err != nil {
+				return nil, err
+			}
 			return instrs, fmt.Errorf("illegal statement: %v", buf.String())
 		}
 	}
