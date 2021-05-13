@@ -2,6 +2,7 @@
 // Use of this source code is governed by an Apache2
 // license that can be found in the LICENSE file.
 
+// nolint: gosec // Test credentials.
 package rest
 
 import (
@@ -856,7 +857,7 @@ func TestBearerTokenPath(t *testing.T) {
 		}
 
 		// Update the token file and try again
-		if err := ioutil.WriteFile(filepath.Join(path, "token.txt"), []byte("newsecret"), 0644); err != nil {
+		if err := ioutil.WriteFile(filepath.Join(path, "token.txt"), []byte("newsecret"), 0600); err != nil {
 			t.Fatalf("Unexpected error: %s", err)
 		}
 
@@ -957,10 +958,10 @@ func TestClientCert(t *testing.T) {
 		}
 
 		// Update the key files and try again..
-		if err := ioutil.WriteFile(filepath.Join(path, "client.pem"), ts.clientCertPem, 0644); err != nil {
+		if err := ioutil.WriteFile(filepath.Join(path, "client.pem"), ts.clientCertPem, 0600); err != nil {
 			t.Fatalf("Unexpected error: %s", err)
 		}
-		if err := ioutil.WriteFile(filepath.Join(path, "client.key"), ts.clientCertKey, 0644); err != nil {
+		if err := ioutil.WriteFile(filepath.Join(path, "client.key"), ts.clientCertKey, 0600); err != nil {
 			t.Fatalf("Unexpected error: %s", err)
 		}
 		if _, err := client.Do(ctx, "GET", "test"); err != nil {
