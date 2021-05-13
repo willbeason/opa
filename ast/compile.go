@@ -3494,7 +3494,7 @@ func rewriteLocalVars(g *localVarGenerator, stack *localDeclaredVars, used VarSe
 
 func rewriteDeclaredVarsInBody(g *localVarGenerator, stack *localDeclaredVars, used VarSet, body Body, errs Errors) (Body, Errors) {
 
-	cpy := Body{}
+	var cpy Body
 
 	for i := range body {
 		var expr *Expr
