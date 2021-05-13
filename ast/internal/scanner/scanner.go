@@ -26,7 +26,6 @@ type Scanner struct {
 	curr     rune
 	width    int
 	errors   []Error
-	filename string
 }
 
 // Error represents a scanner error.
