@@ -940,10 +940,3 @@ func TestOptimizeLookup(t *testing.T) {
 		}
 	})
 }
-
-func expectNoError(t *testing.T, err error) {
-	t.Helper()
-	if err != nil {
-		t.Fatalf("expected no error, got %v", err)
-	}
-}
