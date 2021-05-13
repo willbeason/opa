@@ -31,7 +31,6 @@ import (
 var (
 	jwtEncKey = ast.StringTerm("enc")
 	jwtCtyKey = ast.StringTerm("cty")
-	jwtAlgKey = ast.StringTerm("alg")
 	jwtIssKey = ast.StringTerm("iss")
 	jwtExpKey = ast.StringTerm("exp")
 	jwtNbfKey = ast.StringTerm("nbf")
