@@ -674,7 +674,7 @@ func validateStatus(t *testing.T, actual Status, expected string, expectStatusEr
 	t.Helper()
 
 	if expectStatusErr && !isErrStatus(actual) {
-		t.Errorf("Expected status to be in an error state, but no error has occured.")
+		t.Errorf("Expected status to be in an error state, but no error has occurred.")
 	} else if !expectStatusErr && isErrStatus(actual) {
 		t.Errorf("Unexpected error status %s", actual)
 	}

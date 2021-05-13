@@ -2,6 +2,7 @@
 // Use of this source code is governed by an Apache2
 // license that can be found in the LICENSE file.
 
+// nolint: goconst // string duplication is for test readability.
 package rego
 
 import (
@@ -859,6 +860,9 @@ func TestPrepareAndPartialResult(t *testing.T) {
 	// as expected for PartialResult.
 
 	partial, err := r.PartialResult(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	r2 := partial.Rego(
 		Input(map[string]int{"y": 7}),
@@ -920,6 +924,9 @@ func TestPrepareAndPartial(t *testing.T) {
 	// as expected for Partial.
 
 	partialQuery, err := r.Partial(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 	expectedQuery := "input.x = 1"
 	if len(partialQuery.Queries) != 1 {
 		t.Errorf("expected 1 query but found %d: %+v", len(partialQuery.Queries), pq)
@@ -1830,7 +1837,7 @@ func TestEvalWithInterQueryCache(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"x": 1}`))
+		_, _ = w.Write([]byte(`{"x": 1}`))
 	}))
 	defer ts.Close()
 
@@ -1941,6 +1948,9 @@ func TestPrepareAndCompileWithSchema(t *testing.T) {
 
 	var schema interface{}
 	err := util.Unmarshal([]byte(schemaBytes), &schema)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	schemaSet := ast.NewSchemaSet()
 	schemaSet.Put(ast.InputRootRef, schema)
