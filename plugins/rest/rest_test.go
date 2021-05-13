@@ -1332,7 +1332,7 @@ func TestOauth2ClientCredentialsJwtAuthentication(t *testing.T) {
 	ots := oauth2TestServer{
 		t:                t,
 		tokenTTL:         300,
-		expGrantType:     "client_credentials",
+		expGrantType:     GrantTypeClientCredentials,
 		expScope:         &[]string{"scope1", "scope2"},
 		expX5t:           "jxvd3pmCKZ5idJwg7duqxX9hnQQ=",
 		expJwtCredential: true,
@@ -1595,7 +1595,7 @@ func (t *oauth2TestServer) handle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if t.expGrantType == "" {
-		t.expGrantType = "client_credentials"
+		t.expGrantType = GrantTypeClientCredentials
 	}
 	if r.Form["grant_type"][0] != t.expGrantType {
 		t.t.Fatalf("Expected grant_type=%v", t.expGrantType)

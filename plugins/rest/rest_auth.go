@@ -230,12 +230,12 @@ func (ap *oauth2ClientCredentialsAuthPlugin) NewClient(c Config) (*http.Client, 
 
 	if ap.GrantType == "" {
 		// Use client_credentials as default to not break existing config
-		ap.GrantType = "client_credentials"
-	} else if ap.GrantType != "client_credentials" && ap.GrantType != "jwt_bearer" {
+		ap.GrantType = GrantTypeClientCredentials
+	} else if ap.GrantType != GrantTypeClientCredentials && ap.GrantType != GrantTypeJwtBearer {
 		return nil, errors.New("grant_type must be either client_credentials or jwt_bearer")
 	}
 
-	if ap.GrantType == "jwt_bearer" || (ap.GrantType == "client_credentials" && ap.SigningKeyID != "") {
+	if ap.GrantType == GrantTypeJwtBearer || (ap.GrantType == GrantTypeClientCredentials && ap.SigningKeyID != "") {
 		if err = ap.parseSigningKey(c); err != nil {
 			return nil, err
 		}
@@ -249,7 +249,7 @@ func (ap *oauth2ClientCredentialsAuthPlugin) NewClient(c Config) (*http.Client, 
 	if !strings.HasPrefix(ap.TokenURL, "https://") {
 		return nil, errors.New("token_url required to use https scheme")
 	}
-	if ap.GrantType == "client_credentials" {
+	if ap.GrantType == GrantTypeClientCredentials {
 		if ap.ClientSecret != "" && ap.SigningKeyID != "" {
 			return nil, errors.New("can only use one of client_secret and signing_key for client_credentials")
 		}
@@ -267,7 +267,7 @@ func (ap *oauth2ClientCredentialsAuthPlugin) NewClient(c Config) (*http.Client, 
 // https://tools.ietf.org/html/rfc7523
 func (ap *oauth2ClientCredentialsAuthPlugin) requestToken() (*oauth2Token, error) {
 	body := url.Values{}
-	if ap.GrantType == "jwt_bearer" {
+	if ap.GrantType == GrantTypeJwtBearer {
 		authJwt, err := ap.createAuthJWT(ap.Claims, ap.signingKeyParsed)
 		if err != nil {
 			return nil, err
@@ -275,7 +275,7 @@ func (ap *oauth2ClientCredentialsAuthPlugin) requestToken() (*oauth2Token, error
 		body.Add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
 		body.Add("assertion", *authJwt)
 	} else {
-		body.Add("grant_type", "client_credentials")
+		body.Add("grant_type", GrantTypeClientCredentials)
 
 		if ap.SigningKeyID != "" {
 			authJwt, err := ap.createAuthJWT(ap.Claims, ap.signingKeyParsed)
@@ -301,7 +301,7 @@ func (ap *oauth2ClientCredentialsAuthPlugin) requestToken() (*oauth2Token, error
 	}
 	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	if ap.GrantType == "client_credentials" && ap.ClientSecret != "" {
+	if ap.GrantType == GrantTypeClientCredentials && ap.ClientSecret != "" {
 		r.SetBasicAuth(ap.ClientID, ap.ClientSecret)
 	}
 
