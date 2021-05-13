@@ -15,7 +15,7 @@ func testParseSchema(t *testing.T, schema string, expectedType types.Type) {
 	}
 	newtype, err := loadSchema(sch)
 	if err != nil {
-		t.Fatalf("unexpected error: %s", err)
+		t.Fatalf("unexpected error: %v", err)
 	}
 	if newtype == nil {
 		t.Fatalf("parseSchema returned nil type")
