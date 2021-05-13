@@ -761,7 +761,7 @@ func tokenHeaderCrit(header *tokenHeader, value ast.Value) error {
 		return fmt.Errorf("crit: must be a list")
 	}
 	header.crit = map[string]bool{}
-	v.Iter(func(elem *ast.Term) error {
+	_ = v.Iter(func(elem *ast.Term) error {
 		tv, ok := elem.Value.(ast.String)
 		if !ok {
 			return fmt.Errorf("crit: must be a list of strings")
