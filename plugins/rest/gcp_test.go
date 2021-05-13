@@ -1,3 +1,4 @@
+// nolint: gosec // Test credentials.
 package rest
 
 import (

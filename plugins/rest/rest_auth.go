@@ -2,6 +2,7 @@
 // Use of this source code is governed by an Apache2
 // license that can be found in the LICENSE file.
 
+// nolint: gosec // We don't take a position on users having old/outdated security.
 package rest
 
 import (
@@ -384,10 +385,12 @@ func (ap *clientTLSAuthPlugin) NewClient(c Config) (*http.Client, error) {
 		return nil, errors.New("PEM data could not be found")
 	}
 
+	// nolint: staticcheck // We don't want to forbid users from using this encryption even though it's outdated.
 	if x509.IsEncryptedPEMBlock(block) {
 		if ap.PrivateKeyPassphrase == "" {
 			return nil, errors.New("client certificate passphrase is needed, because the certificate is password encrypted")
 		}
+		// nolint: staticcheck // We don't want to forbid users from using this encryption even though it's outdated.
 		block, err := x509.DecryptPEMBlock(block, []byte(ap.PrivateKeyPassphrase))
 		if err != nil {
 			return nil, err
