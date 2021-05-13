@@ -339,7 +339,7 @@ func (ap *oauth2ClientCredentialsAuthPlugin) requestToken() (*oauth2Token, error
 
 func (ap *oauth2ClientCredentialsAuthPlugin) Prepare(req *http.Request) error {
 	minTokenLifetime := float64(10)
-	if ap.tokenCache == nil || ap.tokenCache.ExpiresAt.Sub(time.Now()).Seconds() < minTokenLifetime {
+	if ap.tokenCache == nil || time.Until(ap.tokenCache.ExpiresAt).Seconds() < minTokenLifetime {
 		ap.logger.Debug("Requesting token from token_url %v", ap.TokenURL)
 		token, err := ap.requestToken()
 		if err != nil {
@@ -385,12 +385,12 @@ func (ap *clientTLSAuthPlugin) NewClient(c Config) (*http.Client, error) {
 		return nil, errors.New("PEM data could not be found")
 	}
 
-	// nolint: staticcheck // We don't want to forbid users from using this encryption even though it's outdated.
+	// nolint: staticcheck // We don't want to forbid users from using this encryption.
 	if x509.IsEncryptedPEMBlock(block) {
 		if ap.PrivateKeyPassphrase == "" {
 			return nil, errors.New("client certificate passphrase is needed, because the certificate is password encrypted")
 		}
-		// nolint: staticcheck // We don't want to forbid users from using this encryption even though it's outdated.
+		// nolint: staticcheck // We don't want to forbid users from using this encryption.
 		block, err := x509.DecryptPEMBlock(block, []byte(ap.PrivateKeyPassphrase))
 		if err != nil {
 			return nil, err

@@ -53,15 +53,15 @@ func TestEnvironmentCredentialService(t *testing.T) {
 	cs := &awsEnvironmentCredentialService{}
 
 	// wrong path: some required environment is missing
-	envCreds, err := cs.credentials()
+	_, err := cs.credentials()
 	assertErr("no AWS_ACCESS_KEY_ID set in environment", err, t)
 
 	os.Setenv("AWS_ACCESS_KEY_ID", "MYAWSACCESSKEYGOESHERE")
-	envCreds, err = cs.credentials()
+	_, err = cs.credentials()
 	assertErr("no AWS_SECRET_ACCESS_KEY set in environment", err, t)
 
 	os.Setenv("AWS_SECRET_ACCESS_KEY", "MYAWSSECRETACCESSKEYGOESHERE")
-	envCreds, err = cs.credentials()
+	_, err = cs.credentials()
 	assertErr("no AWS_REGION set in environment", err, t)
 
 	os.Setenv("AWS_REGION", "us-east-1")
@@ -88,7 +88,7 @@ func TestEnvironmentCredentialService(t *testing.T) {
 		os.Setenv(testCase.tokenEnv, testCase.tokenValue)
 		expectedCreds.SessionToken = testCase.tokenValue
 
-		envCreds, err = cs.credentials()
+		envCreds, err := cs.credentials()
 		if err != nil {
 			t.Error("unexpected error: " + err.Error())
 		}
@@ -509,11 +509,8 @@ func TestV4SigningWithMultiValueHeaders(t *testing.T) {
 
 // simulate EC2 metadata service
 type ec2CredTestServer struct {
-	t         *testing.T
-	server    *httptest.Server
-	expPath   string
-	expMethod string
-	payload   metadataPayload // must set before use
+	server  *httptest.Server
+	payload metadataPayload // must set before use
 }
 
 func (t *ec2CredTestServer) handle(w http.ResponseWriter, r *http.Request) {
