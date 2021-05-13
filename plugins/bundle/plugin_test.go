@@ -2,6 +2,7 @@
 // Use of this source code is governed by an Apache2
 // license that can be found in the LICENSE file.
 
+// nolint: goconst // string duplication is for test readability.
 package bundle
 
 import (
@@ -1153,12 +1154,12 @@ func TestPluginSetCompilerOnContext(t *testing.T) {
 	events := []storage.TriggerEvent{}
 
 	if err := storage.Txn(ctx, manager.Store, storage.WriteParams, func(txn storage.Transaction) error {
-		manager.Store.Register(ctx, txn, storage.TriggerConfig{
+		_, err := manager.Store.Register(ctx, txn, storage.TriggerConfig{
 			OnCommit: func(ctx context.Context, txn storage.Transaction, event storage.TriggerEvent) {
 				events = append(events, event)
 			},
 		})
-		return nil
+		return err
 	}); err != nil {
 		t.Fatal(err)
 	}
@@ -1619,7 +1620,7 @@ func TestUpgradeLegacyBundleToMuiltiBundleNewBundles(t *testing.T) {
 
 	module = "package a.c\n\nbar=1"
 	b = bundle.Bundle{
-		Manifest: bundle.Manifest{Revision: fmt.Sprintf("b2-1"), Roots: &[]string{"a/b2", "a/c"}},
+		Manifest: bundle.Manifest{Revision: "b2-1", Roots: &[]string{"a/b2", "a/c"}},
 		Data: map[string]interface{}{
 			"a": map[string]interface{}{
 				"b2": "foo",

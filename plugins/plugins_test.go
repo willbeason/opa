@@ -268,8 +268,8 @@ func (m *mockForInitStartOrdering) Start(ctx context.Context) error {
 	return fmt.Errorf("expected manager to be initialized")
 }
 
-func (m *mockForInitStartOrdering) Stop(ctx context.Context)                            { return }
-func (m *mockForInitStartOrdering) Reconfigure(ctx context.Context, config interface{}) { return }
+func (m *mockForInitStartOrdering) Stop(ctx context.Context)                            {}
+func (m *mockForInitStartOrdering) Reconfigure(ctx context.Context, config interface{}) {}
 
 func TestPluginManagerAuthPlugin(t *testing.T) {
 	m, err := New([]byte(`{"plugins": {"someplugin": {}}}`), "test", inmem.New())

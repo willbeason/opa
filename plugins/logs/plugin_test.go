@@ -476,7 +476,7 @@ func TestPluginRequeBufferPreserved(t *testing.T) {
 		t.Fatal("Expected error")
 	}
 
-	_ = <-fixture.server.ch
+	<-fixture.server.ch
 
 	if fixture.plugin.buffer.Len() < bufLen {
 		t.Fatal("Expected buffer to be preserved")
@@ -709,7 +709,7 @@ func TestPluginRateLimitRequeue(t *testing.T) {
 		t.Fatal("Expected error")
 	}
 
-	_ = <-fixture.server.ch
+	<-fixture.server.ch
 
 	if fixture.plugin.buffer.Len() < bufLen {
 		t.Fatal("Expected buffer to be preserved")

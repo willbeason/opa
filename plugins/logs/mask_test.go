@@ -159,7 +159,7 @@ func TestNewMaskRule(t *testing.T) {
 		t.Run(tc.note, func(t *testing.T) {
 			result, err := newMaskRule(tc.input.Path, withOP(tc.input.OP), withValue(tc.input.Value))
 			if tc.input.failUndefinedPath {
-				withFailUndefinedPath()(result)
+				_ = withFailUndefinedPath()(result)
 			}
 
 			if tc.expErr != nil {
@@ -259,7 +259,7 @@ func TestMaskRuleMask(t *testing.T) {
 			exp:   `{}`,
 		},
 		{
-			note: "upsert undefined input: fail unkown object path on",
+			note: "upsert undefined input: fail unknown object path on",
 			ptr: &maskRule{
 				OP:                maskOPUpsert,
 				Path:              "/input/foo",
@@ -279,7 +279,7 @@ func TestMaskRuleMask(t *testing.T) {
 			exp:   `{}`,
 		},
 		{
-			note: "erase undefined result: fail unkown object path on",
+			note: "erase undefined result: fail unknown object path on",
 			ptr: &maskRule{
 				OP:                maskOPRemove,
 				Path:              "/result/foo",
@@ -299,7 +299,7 @@ func TestMaskRuleMask(t *testing.T) {
 			exp:   `{}`,
 		},
 		{
-			note: "upsert undefined result: fail unkown object path on",
+			note: "upsert undefined result: fail unknown object path on",
 			ptr: &maskRule{
 				OP:                maskOPUpsert,
 				Path:              "/result/foo",
@@ -319,7 +319,7 @@ func TestMaskRuleMask(t *testing.T) {
 			exp:   `{"input": {"bar": 1}}`,
 		},
 		{
-			note: "erase undefined node: fail unkown object path on",
+			note: "erase undefined node: fail unknown object path on",
 			ptr: &maskRule{
 				OP:                maskOPRemove,
 				Path:              "/input/foo",
@@ -339,7 +339,7 @@ func TestMaskRuleMask(t *testing.T) {
 			exp:   `{"input": {"bar": 1, "foo": null}, "masked": ["/input/foo"]}`,
 		},
 		{
-			note: "upsert undefined node with nil value: fail unkown object path on",
+			note: "upsert undefined node with nil value: fail unknown object path on",
 			ptr: &maskRule{
 				OP:                maskOPUpsert,
 				Path:              "/input/foo",
@@ -548,7 +548,7 @@ func TestMaskRuleMask(t *testing.T) {
 
 			ptr, err := newMaskRule(tc.ptr.Path, withOP(tc.ptr.OP), withValue(tc.ptr.Value))
 			if tc.ptr.failUndefinedPath {
-				withFailUndefinedPath()(ptr)
+				_ = withFailUndefinedPath()(ptr)
 			}
 
 			if err != nil {

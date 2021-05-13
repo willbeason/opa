@@ -148,7 +148,9 @@ func BenchmarkMaskingNop(b *testing.B) {
 	}
 
 	cfg := &Config{Service: "svc"}
-	cfg.validateAndInjectDefaults([]string{"svc"}, nil)
+	if err := cfg.validateAndInjectDefaults([]string{"svc"}, nil); err != nil {
+		b.Fatal(err)
+	}
 	plugin := New(cfg, manager)
 
 	b.ResetTimer()
@@ -186,7 +188,9 @@ func BenchmarkMaskingRuleCountsNop(b *testing.B) {
 	}
 
 	cfg := &Config{Service: "svc"}
-	cfg.validateAndInjectDefaults([]string{"svc"}, nil)
+	if err := cfg.validateAndInjectDefaults([]string{"svc"}, nil); err != nil {
+		b.Fatal(err)
+	}
 	plugin := New(cfg, manager)
 
 	for _, ruleCount := range numRules {
@@ -239,7 +243,9 @@ func BenchmarkMaskingErase(b *testing.B) {
 	}
 
 	cfg := &Config{Service: "svc"}
-	cfg.validateAndInjectDefaults([]string{"svc"}, nil)
+	if err := cfg.validateAndInjectDefaults([]string{"svc"}, nil); err != nil {
+		b.Fatal(err)
+	}
 	plugin := New(cfg, manager)
 
 	b.ResetTimer()

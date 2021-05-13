@@ -40,7 +40,6 @@ type Plugin struct {
 	logger            logging.Logger
 	mtx               sync.Mutex
 	cfgMtx            sync.Mutex
-	legacyConfig      bool
 	ready             bool
 	bundlePersistPath string
 }

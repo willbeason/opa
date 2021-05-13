@@ -257,10 +257,10 @@ func TestPluginReconfigure(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	pluginConfig := []byte(fmt.Sprintf(`{
+	pluginConfig := []byte(`{
 			"service": "example",
 			"partition_name": "test"
-		}`))
+		}`)
 
 	config, _ := ParseConfig(pluginConfig, fixture.manager.Services(), nil)
 
@@ -307,9 +307,9 @@ func TestParseConfigUseDefaultServiceNoConsole(t *testing.T) {
 		"s3",
 	}
 
-	loggerConfig := []byte(fmt.Sprintf(`{
+	loggerConfig := []byte(`{
 		"console": false
-	}`))
+	}`)
 
 	config, err := ParseConfig(loggerConfig, services, nil)
 
@@ -329,9 +329,9 @@ func TestParseConfigDefaultServiceWithConsole(t *testing.T) {
 		"s3",
 	}
 
-	loggerConfig := []byte(fmt.Sprintf(`{
+	loggerConfig := []byte(`{
 		"console": true
-	}`))
+	}`)
 
 	config, err := ParseConfig(loggerConfig, services, nil)
 
@@ -345,12 +345,12 @@ func TestParseConfigDefaultServiceWithConsole(t *testing.T) {
 }
 
 func TestParseConfigDefaultServiceWithNoServiceOrConsole(t *testing.T) {
-	loggerConfig := []byte(fmt.Sprintf(`{}`))
+	loggerConfig := []byte(`{}`)
 
 	_, err := ParseConfig(loggerConfig, []string{}, nil)
 
 	if err == nil {
-		t.Errorf("Expected an error but err==nil")
+		t.Error("Expected an error but err==nil")
 	}
 }
 
@@ -393,9 +393,9 @@ func newTestFixture(t *testing.T, m metrics.Metrics, options ...testPluginCustom
 		t.Fatal(err)
 	}
 
-	pluginConfig := []byte(fmt.Sprintf(`{
+	pluginConfig := []byte(`{
 			"service": "example",
-		}`))
+		}`)
 
 	config, _ := ParseConfig(pluginConfig, manager.Services(), nil)
 	for _, option := range options {
