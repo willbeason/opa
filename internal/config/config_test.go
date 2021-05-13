@@ -224,7 +224,7 @@ func TestMergeValuesOverrideSingleList(t *testing.T) {
 	dest := map[string]interface{}{
 		"a": map[string]interface{}{
 			"b": []map[string]interface{}{
-				map[string]interface{}{
+				{
 					"k1": "v1",
 					"k2": "v2",
 				},
@@ -234,7 +234,7 @@ func TestMergeValuesOverrideSingleList(t *testing.T) {
 	src := map[string]interface{}{
 		"a": map[string]interface{}{
 			"b": []map[string]interface{}{
-				map[string]interface{}{
+				{
 					"k3": "v3",
 				},
 			},
@@ -247,7 +247,7 @@ func TestMergeValuesOverrideSingleList(t *testing.T) {
 	expected := map[string]interface{}{
 		"a": map[string]interface{}{
 			"b": []map[string]interface{}{
-				map[string]interface{}{
+				{
 					"k3": "v3",
 				},
 			},

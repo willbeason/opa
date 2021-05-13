@@ -1286,7 +1286,7 @@ func TestUnsafeBuiltins(t *testing.T) {
 	t.Run("unsafe query", func(t *testing.T) {
 		r := New(
 			Query(`count([1, 2, 3])`),
-			UnsafeBuiltins(map[string]struct{}{"count": struct{}{}}),
+			UnsafeBuiltins(map[string]struct{}{"count": {}}),
 		)
 		if _, err := r.Eval(ctx); err == nil || !strings.Contains(err.Error(), unsafeCountExpr) {
 			t.Fatalf("Expected unsafe built-in error but got %v", err)
@@ -1301,7 +1301,7 @@ func TestUnsafeBuiltins(t *testing.T) {
 				count(input.requests) > 10
 			}
 			`),
-			UnsafeBuiltins(map[string]struct{}{"count": struct{}{}}),
+			UnsafeBuiltins(map[string]struct{}{"count": {}}),
 		)
 		if _, err := r.Eval(ctx); err == nil || !strings.Contains(err.Error(), unsafeCountExpr) {
 			t.Fatalf("Expected unsafe built-in error but got %v", err)
@@ -1310,7 +1310,7 @@ func TestUnsafeBuiltins(t *testing.T) {
 
 	t.Run("inherit in query", func(t *testing.T) {
 		r := New(
-			Compiler(ast.NewCompiler().WithUnsafeBuiltins(map[string]struct{}{"count": struct{}{}})),
+			Compiler(ast.NewCompiler().WithUnsafeBuiltins(map[string]struct{}{"count": {}})),
 			Query("count([])"),
 		)
 		if _, err := r.Eval(ctx); err == nil || !strings.Contains(err.Error(), unsafeCountExpr) {
@@ -1320,7 +1320,7 @@ func TestUnsafeBuiltins(t *testing.T) {
 
 	t.Run("override/disable in query", func(t *testing.T) {
 		r := New(
-			Compiler(ast.NewCompiler().WithUnsafeBuiltins(map[string]struct{}{"count": struct{}{}})),
+			Compiler(ast.NewCompiler().WithUnsafeBuiltins(map[string]struct{}{"count": {}})),
 			UnsafeBuiltins(map[string]struct{}{}),
 			Query("count([])"),
 		)
@@ -1331,8 +1331,8 @@ func TestUnsafeBuiltins(t *testing.T) {
 
 	t.Run("override/change in query", func(t *testing.T) {
 		r := New(
-			Compiler(ast.NewCompiler().WithUnsafeBuiltins(map[string]struct{}{"count": struct{}{}})),
-			UnsafeBuiltins(map[string]struct{}{"max": struct{}{}}),
+			Compiler(ast.NewCompiler().WithUnsafeBuiltins(map[string]struct{}{"count": {}})),
+			UnsafeBuiltins(map[string]struct{}{"max": {}}),
 			Query("count([]); max([1,2])"),
 		)
 
@@ -1345,7 +1345,7 @@ func TestUnsafeBuiltins(t *testing.T) {
 	t.Run("ignore if given compiler", func(t *testing.T) {
 		r := New(
 			Compiler(ast.NewCompiler()),
-			UnsafeBuiltins(map[string]struct{}{"count": struct{}{}}),
+			UnsafeBuiltins(map[string]struct{}{"count": {}}),
 			Query("data.test.p = 0"),
 			Module("test.rego", `package test
 

@@ -314,12 +314,12 @@ func TestNew(t *testing.T) {
 		},
 		{
 			name: "Oauth2JwtBearerMissingSigningKey",
-			input: `{
+			input: fmt.Sprintf(`{
 				"name": "foo",
 				"url": "http://localhost",
 				"credentials": {
 					"oauth2": {
-						"grant_type": "jwt_bearer",
+						"grant_type": %q,
 						"token_url": "https://localhost",
 						"scopes": ["profile", "opa"],
 						"additional_claims": {
@@ -327,17 +327,17 @@ func TestNew(t *testing.T) {
 						}
 					}
 				}
-			}`,
+			}`, GrantTypeJwtBearer),
 			wantErr: true,
 		},
 		{
 			name: "Oauth2JwtBearerSigningKeyWithoutCorrespondingKey",
-			input: `{
+			input: fmt.Sprintf(`{
 				"name": "foo",
 				"url": "http://localhost",
 				"credentials": {
 					"oauth2": {
-						"grant_type": "jwt_bearer",
+						"grant_type": %q,
 						"signing_key": "key2",
 						"token_url": "https://localhost",
 						"scopes": ["profile", "opa"],
@@ -346,17 +346,17 @@ func TestNew(t *testing.T) {
 						}
 					}
 				}
-			}`,
+			}`, GrantTypeJwtBearer),
 			wantErr: true,
 		},
 		{
 			name: "Oauth2JwtBearerSigningKeyWithCorrespondingKey",
-			input: `{
+			input: fmt.Sprintf(`{
 				"name": "foo",
 				"url": "http://localhost",
 				"credentials": {
 					"oauth2": {
-						"grant_type": "jwt_bearer",
+						"grant_type": %q,
 						"signing_key": "key1",
 						"token_url": "https://localhost",
 						"scopes": ["profile", "opa"],
@@ -365,16 +365,16 @@ func TestNew(t *testing.T) {
 						}
 					}
 				}
-			}`,
+			}`, GrantTypeJwtBearer),
 		},
 		{
 			name: "Oauth2JwtBearerSigningKeyPublicKeyReference",
-			input: `{
+			input: fmt.Sprintf(`{
 				"name": "foo",
 				"url": "http://localhost",
 				"credentials": {
 					"oauth2": {
-						"grant_type": "jwt_bearer",
+						"grant_type": %q,
 						"signing_key": "pub_key",
 						"token_url": "https://localhost",
 						"scopes": ["profile", "opa"],
@@ -383,7 +383,7 @@ func TestNew(t *testing.T) {
 						}
 					}
 				}
-			}`,
+			}`, GrantTypeJwtBearer),
 			wantErr: true,
 		},
 		{
@@ -406,12 +406,12 @@ func TestNew(t *testing.T) {
 		},
 		{
 			name: "Oauth2ClientCredentialsMissingCredentials",
-			input: `{
+			input: fmt.Sprintf(`{
 				"name": "foo",
 				"url": "http://localhost",
 				"credentials": {
 					"oauth2": {
-						"grant_type": "client_credentials",
+						"grant_type": %q,
 						"token_url": "https://localhost",
 						"scopes": ["profile", "opa"],
 						"additional_claims": {
@@ -419,48 +419,48 @@ func TestNew(t *testing.T) {
 						}
 					}
 				}
-			}`,
+			}`, GrantTypeClientCredentials),
 			wantErr: true,
 		},
 		{
 			name: "Oauth2ClientCredentialsJwtNoAdditionalClaims",
-			input: `{
+			input: fmt.Sprintf(`{
 				"name": "foo",
 				"url": "http://localhost",
 				"credentials": {
 					"oauth2": {
-						"grant_type": "client_credentials",
+						"grant_type": %q,
 						"signing_key": "key1",
 						"token_url": "https://localhost",
 						"scopes": ["profile", "opa"]
 					}
 				}
-			}`,
+			}`, GrantTypeClientCredentials),
 		},
 		{
 			name: "Oauth2ClientCredentialsJwtThumbprint",
-			input: `{
+			input: fmt.Sprintf(`{
 				"name": "foo",
 				"url": "http://localhost",
 				"credentials": {
 					"oauth2": {
-						"grant_type": "client_credentials",
+						"grant_type": %q,
 						"signing_key": "key1",
 						"token_url": "https://localhost",
 						"scopes": ["profile", "opa"],
 						"thumbprint": "8F1BDDDE9982299E62749C20EDDBAAC57F619D04"
 					}
 				}
-			}`,
+			}`, GrantTypeClientCredentials),
 		},
 		{
 			name: "Oauth2ClientCredentialsTooManyCredentials",
-			input: `{
+			input: fmt.Sprintf(`{
 				"name": "foo",
 				"url": "http://localhost",
 				"credentials": {
 					"oauth2": {
-						"grant_type": "client_credentials",
+						"grant_type": %q,
 						"signing_key": "key1",
 						"client_id": "client-one",
 						"client_secret": "supersecret",
@@ -471,17 +471,17 @@ func TestNew(t *testing.T) {
 						}
 					}
 				}
-			}`,
+			}`, GrantTypeClientCredentials),
 			wantErr: true,
 		},
 		{
 			name: "Oauth2ClientCredentialsJWTAuthentication",
-			input: `{
+			input: fmt.Sprintf(`{
 				"name": "foo",
 				"url": "http://localhost",
 				"credentials": {
 					"oauth2": {
-						"grant_type": "client_credentials",
+						"grant_type": %q,
 						"signing_key": "key1",
 						"token_url": "https://localhost",
 						"scopes": ["profile", "opa"],
@@ -490,7 +490,7 @@ func TestNew(t *testing.T) {
 						}
 					}
 				}
-			}`,
+			}`, GrantTypeClientCredentials),
 		},
 		{
 			name: "S3WebIdentityMissingEnvVars",
@@ -780,8 +780,8 @@ func testBearerToken(t *testing.T, scheme, token string) {
 		"url": %q,
 		"credentials": {
 			"bearer": {
-				"scheme": "%s",
-				"token": "%s"
+				"scheme": %q,
+				"token": %q
 			}
 		}
 	}`, ts.server.URL, scheme, token)
@@ -880,8 +880,8 @@ func TestBearerTokenInvalidConfig(t *testing.T) {
 		"url": %q,
 		"credentials": {
 			"bearer": {
-				"token_path": "%s",
-				"token": "%s"
+				"token_path": %q,
+				"token": %q
 			}
 		}
 	}`, ts.server.URL, "token.txt", "secret")
@@ -1490,7 +1490,7 @@ func newOauth2JwtBearerTestClient(t *testing.T, keys map[string]*keys.Config, ts
 			"credentials": {
 				"oauth2": {
 					"token_url": "%v/token",
-					"grant_type": "jwt_bearer",
+					"grant_type": %q,
 					"scopes": ["scope1", "scope2"],
 					"additional_claims": {
 						"aud": "test-audience",
@@ -1498,7 +1498,7 @@ func newOauth2JwtBearerTestClient(t *testing.T, keys map[string]*keys.Config, ts
 					}
 				}
 			}
-		}`, ts.server.URL, ots.server.URL)
+		}`, ts.server.URL, ots.server.URL, GrantTypeJwtBearer)
 
 	client, err := New([]byte(config), keys)
 	if err != nil {
@@ -1521,7 +1521,7 @@ func newOauth2ClientCredentialsJwtAuthClient(t *testing.T, keys map[string]*keys
 			"credentials": {
 				"oauth2": {
 					"token_url": "%v/token",
-					"grant_type": "client_credentials",
+					"grant_type": %q,
 					"signing_key": "key1",
 					"client_id": "client-one",
 					"scopes": ["scope1", "scope2"],
@@ -1532,7 +1532,7 @@ func newOauth2ClientCredentialsJwtAuthClient(t *testing.T, keys map[string]*keys
 					}
 				}
 			}
-		}`, ts.server.URL, ots.server.URL)
+		}`, ts.server.URL, ots.server.URL, GrantTypeClientCredentials)
 
 	client, err := New([]byte(config), keys)
 	if err != nil {

@@ -248,7 +248,7 @@ func TestCompilerInputBundle(t *testing.T) {
 
 	b := &bundle.Bundle{
 		Modules: []bundle.ModuleFile{
-			bundle.ModuleFile{
+			{
 				URL:    "/foo.rego",
 				Path:   "/foo.rego",
 				Raw:    []byte("package test\np = 7"),
@@ -274,13 +274,13 @@ func TestCompilerInputInvalidBundle(t *testing.T) {
 
 	b := &bundle.Bundle{
 		Modules: []bundle.ModuleFile{
-			bundle.ModuleFile{
+			{
 				URL:    "/url",
 				Path:   "/foo.rego",
 				Raw:    []byte("package test\np = 0"),
 				Parsed: ast.MustParseModule("package test\np = 0"),
 			},
-			bundle.ModuleFile{
+			{
 				URL:    "/url",
 				Path:   "/bar.rego",
 				Raw:    []byte("package test\nq = 1"),
@@ -494,8 +494,8 @@ func TestCompilerWasmTargetWithCapabilitiesMismatch(t *testing.T) {
 	test.WithTempFS(files, func(root string) {
 
 		for note, wabis := range map[string][]ast.WasmABIVersion{
-			"none":     []ast.WasmABIVersion{},
-			"mismatch": []ast.WasmABIVersion{{Version: 0}, {Version: 1, Minor: 2}},
+			"none":     {},
+			"mismatch": {{Version: 0}, {Version: 1, Minor: 2}},
 		} {
 			t.Run(note, func(t *testing.T) {
 				caps := ast.CapabilitiesForThisVersion()

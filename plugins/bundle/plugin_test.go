@@ -150,7 +150,7 @@ func TestPluginOneShotBundlePersistence(t *testing.T) {
 		Manifest: bundle.Manifest{Revision: "quickbrownfaux"},
 		Data:     util.MustUnmarshalJSON([]byte(`{"foo": {"bar": 1, "baz": "qux"}}`)).(map[string]interface{}),
 		Modules: []bundle.ModuleFile{
-			bundle.ModuleFile{
+			{
 				URL:    "/foo/bar.rego",
 				Path:   "/foo/bar.rego",
 				Parsed: ast.MustParseModule(module),
@@ -245,7 +245,7 @@ func TestLoadAndActivateBundlesFromDisk(t *testing.T) {
 		Manifest: bundle.Manifest{Revision: "quickbrownfaux"},
 		Data:     util.MustUnmarshalJSON([]byte(`{"foo": {"bar": 1, "baz": "qux"}}`)).(map[string]interface{}),
 		Modules: []bundle.ModuleFile{
-			bundle.ModuleFile{
+			{
 				URL:    "/foo/bar.rego",
 				Path:   "/foo/bar.rego",
 				Parsed: ast.MustParseModule(module),
@@ -1035,7 +1035,7 @@ func TestPluginActivateScopedBundle(t *testing.T) {
 			},
 		},
 		Modules: []bundle.ModuleFile{
-			bundle.ModuleFile{
+			{
 				Path:   "bundle/id1",
 				Parsed: ast.MustParseModule(module),
 				Raw:    []byte(module),
@@ -1072,7 +1072,7 @@ func TestPluginActivateScopedBundle(t *testing.T) {
 			},
 		},
 		Modules: []bundle.ModuleFile{
-			bundle.ModuleFile{
+			{
 				Path:   "bundle/id2",
 				Parsed: ast.MustParseModule(module),
 				Raw:    []byte(module),
@@ -1140,7 +1140,7 @@ func TestPluginSetCompilerOnContext(t *testing.T) {
 		Manifest: bundle.Manifest{Revision: "quickbrownfaux"},
 		Data:     map[string]interface{}{},
 		Modules: []bundle.ModuleFile{
-			bundle.ModuleFile{
+			{
 				Path:   "/test.rego",
 				Parsed: ast.MustParseModule(module),
 				Raw:    []byte(module),
@@ -1447,7 +1447,7 @@ func TestUpgradeLegacyBundleToMuiltiBundleSameBundle(t *testing.T) {
 	// Start with a "legacy" style config for a single bundle
 	plugin.config = Config{
 		Bundles: map[string]*Source{
-			bundleName: &Source{
+			bundleName: {
 				Service: "s1",
 			},
 		},
@@ -1466,7 +1466,7 @@ func TestUpgradeLegacyBundleToMuiltiBundleSameBundle(t *testing.T) {
 			},
 		},
 		Modules: []bundle.ModuleFile{
-			bundle.ModuleFile{
+			{
 				Path:   "bundle/id1",
 				Parsed: ast.MustParseModule(module),
 				Raw:    []byte(module),
@@ -1490,7 +1490,7 @@ func TestUpgradeLegacyBundleToMuiltiBundleSameBundle(t *testing.T) {
 	// Update to the newer style config with the same bundle
 	multiBundleConf := &Config{
 		Bundles: map[string]*Source{
-			bundleName: &Source{
+			bundleName: {
 				Service: "s1",
 			},
 		},
@@ -1562,7 +1562,7 @@ func TestUpgradeLegacyBundleToMuiltiBundleNewBundles(t *testing.T) {
 	// Start with a "legacy" style config for a single bundle
 	plugin.config = Config{
 		Bundles: map[string]*Source{
-			bundleName: &Source{
+			bundleName: {
 				Config:  downloadConf,
 				Service: serviceName,
 			},
@@ -1582,7 +1582,7 @@ func TestUpgradeLegacyBundleToMuiltiBundleNewBundles(t *testing.T) {
 			},
 		},
 		Modules: []bundle.ModuleFile{
-			bundle.ModuleFile{
+			{
 				Path:   "bundle/id1",
 				Parsed: ast.MustParseModule(module),
 				Raw:    []byte(module),
@@ -1606,7 +1606,7 @@ func TestUpgradeLegacyBundleToMuiltiBundleNewBundles(t *testing.T) {
 	// Update to the newer style config with a new bundle
 	multiBundleConf := &Config{
 		Bundles: map[string]*Source{
-			"b2": &Source{
+			"b2": {
 				Config:  downloadConf,
 				Service: serviceName,
 			},
@@ -1626,7 +1626,7 @@ func TestUpgradeLegacyBundleToMuiltiBundleNewBundles(t *testing.T) {
 			},
 		},
 		Modules: []bundle.ModuleFile{
-			bundle.ModuleFile{
+			{
 				Path:   "id1",
 				Parsed: ast.MustParseModule(module),
 				Raw:    []byte(module),
@@ -1752,7 +1752,7 @@ func TestSaveBundleToDiskOverWrite(t *testing.T) {
 			},
 		},
 		Modules: []bundle.ModuleFile{
-			bundle.ModuleFile{
+			{
 				Path:   "bundle/id1",
 				Parsed: ast.MustParseModule(module),
 				Raw:    []byte(module),
@@ -1937,7 +1937,7 @@ func TestPluginUsingFileLoader(t *testing.T) {
 		url := "file://" + name
 
 		p := New(&Config{Bundles: map[string]*Source{
-			"test": &Source{
+			"test": {
 				SizeLimitBytes: 1e5,
 				Resource:       url,
 			},

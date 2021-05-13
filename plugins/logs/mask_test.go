@@ -636,7 +636,7 @@ func TestMaskRuleSetMask(t *testing.T) {
 		{
 			note: "erase input",
 			rules: []*maskRule{
-				&maskRule{
+				{
 					OP:   maskOPRemove,
 					Path: "/input",
 				},
@@ -647,7 +647,7 @@ func TestMaskRuleSetMask(t *testing.T) {
 		{
 			note: "erase result",
 			rules: []*maskRule{
-				&maskRule{
+				{
 					OP:   maskOPRemove,
 					Path: "/result",
 				},
@@ -658,11 +658,11 @@ func TestMaskRuleSetMask(t *testing.T) {
 		{
 			note: "erase input and result nested",
 			rules: []*maskRule{
-				&maskRule{
+				{
 					OP:   maskOPRemove,
 					Path: "/input/a/b",
 				},
-				&maskRule{
+				{
 					OP:   maskOPRemove,
 					Path: "/result/c/d",
 				},
@@ -673,7 +673,7 @@ func TestMaskRuleSetMask(t *testing.T) {
 		{
 			note: "expected rule error",
 			rules: []*maskRule{
-				&maskRule{
+				{
 					OP:                maskOPRemove,
 					Path:              "/result",
 					failUndefinedPath: true,

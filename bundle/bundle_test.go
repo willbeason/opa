@@ -1201,8 +1201,8 @@ func TestParsedModules(t *testing.T) {
 
 func TestMergeCorruptManifest(t *testing.T) {
 	_, err := Merge([]*Bundle{
-		&Bundle{},
-		&Bundle{},
+		{},
+		{},
 	})
 	if err == nil || err.Error() != "bundle manifest not initialized" {
 		t.Fatal("unexpected error:", err)
@@ -1224,7 +1224,7 @@ func TestMerge(t *testing.T) {
 		{
 			note: "no op",
 			bundles: []*Bundle{
-				&Bundle{
+				{
 					Manifest: Manifest{
 						Revision: "abcdef",
 					},
