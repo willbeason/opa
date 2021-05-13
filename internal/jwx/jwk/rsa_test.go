@@ -41,7 +41,7 @@ func TestRSA(t *testing.T) {
 			t.Fatalf("JSON marshal failed: %s", err.Error())
 		}
 
-		if bytes.Compare(jsonBuf1, jsonBuf2) != 0 {
+		if !bytes.Equal(jsonBuf1, jsonBuf2) {
 			t.Fatal("JSON marshal buffers do not match")
 		}
 	}
