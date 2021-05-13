@@ -154,7 +154,7 @@ func (t *parser) key(data map[string]interface{}) error {
 			}
 			kk := string(k)
 			// Find or create target list
-			var list []interface{}
+			list := []interface{}{}
 			if _, ok := data[kk]; ok {
 				list = data[kk].([]interface{})
 			}
@@ -311,7 +311,7 @@ func (t *parser) valList() ([]interface{}, error) {
 		return []interface{}{}, ErrNotList
 	}
 
-	var list []interface{}
+	list := []interface{}{}
 	stop := runeSet([]rune{',', '}'})
 	for {
 		switch rs, last, err := runesUntil(t.sc, stop); {
