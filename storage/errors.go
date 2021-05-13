@@ -39,10 +39,6 @@ const (
 	// PolicyNotSupportedErr indicate the caller attempted to perform a policy
 	// management operation against a store that does not support them.
 	PolicyNotSupportedErr = "storage_policy_not_supported_error"
-
-	// IndexingNotSupportedErr indicate the caller attempted to perform an
-	// indexing operation against a store that does not support them.
-	IndexingNotSupportedErr = "storage_indexing_not_supported_error"
 )
 
 // Error is the error type returned by the storage layer.
@@ -94,15 +90,6 @@ func IsInvalidTransaction(err error) bool {
 	return false
 }
 
-// IsIndexingNotSupported returns true if this error is a IndexingNotSupportedErr.
-func IsIndexingNotSupported(err error) bool {
-	switch err := err.(type) {
-	case *Error:
-		return err.Code == IndexingNotSupportedErr
-	}
-	return false
-}
-
 func writeConflictError(path Path) *Error {
 	return &Error{
 		Code:    WriteConflictErr,
@@ -125,11 +112,5 @@ func writesNotSupportedError() *Error {
 func policyNotSupportedError() *Error {
 	return &Error{
 		Code: PolicyNotSupportedErr,
-	}
-}
-
-func indexingNotSupportedError() *Error {
-	return &Error{
-		Code: IndexingNotSupportedErr,
 	}
 }
