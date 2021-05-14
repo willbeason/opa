@@ -31,7 +31,7 @@ func TestRunBenchmark(t *testing.T) {
 
 	rc, err := benchMain(args, params, &buf, &goBenchRunner{})
 	if err != nil {
-		t.Fatalf("unexpected error: %s", err)
+		t.Fatalf("Unexpected error: %s", err)
 	}
 
 	if rc != 0 {
@@ -67,7 +67,7 @@ func TestRunBenchmarkFailFast(t *testing.T) {
 
 	rc, err := benchMain(args, params, &buf, &goBenchRunner{})
 	if err != nil {
-		t.Fatalf("unexpected error: %s", err)
+		t.Fatalf("Unexpected error: %s", err)
 	}
 
 	if rc != 1 {
@@ -108,7 +108,7 @@ func TestBenchPartial(t *testing.T) {
 
 	rc, err := benchMain(args, params, &buf, &mockBenchRunner{})
 	if err != nil {
-		t.Fatalf("unexpected error: %s", err)
+		t.Fatalf("Unexpected error: %s", err)
 	}
 
 	if rc != 0 {
@@ -123,7 +123,7 @@ func TestBenchMainErrPreparing(t *testing.T) {
 
 	rc, err := benchMain(args, params, &buf, &mockBenchRunner{})
 	if err != nil {
-		t.Fatalf("unexpected error: %s", err)
+		t.Fatalf("Unexpected error: %s", err)
 	}
 
 	if rc != 1 {
@@ -143,7 +143,7 @@ func TestBenchMainErrRunningBenchmark(t *testing.T) {
 
 	rc, err := benchMain(args, params, &buf, mockRunner)
 	if err != nil {
-		t.Fatalf("unexpected error: %s", err)
+		t.Fatalf("Unexpected error: %s", err)
 	}
 
 	if rc != 1 {
@@ -167,7 +167,7 @@ func TestBenchMainWithCount(t *testing.T) {
 
 	rc, err := benchMain(args, params, &buf, mockRunner)
 	if err != nil {
-		t.Fatalf("unexpected error: %s", err)
+		t.Fatalf("Unexpected error: %s", err)
 	}
 
 	if rc != 0 {
@@ -195,7 +195,7 @@ func TestBenchMainWithNegativeCount(t *testing.T) {
 
 	rc, err := benchMain(args, params, &buf, mockRunner)
 	if err != nil {
-		t.Fatalf("unexpected error: %s", err)
+		t.Fatalf("Unexpected error: %s", err)
 	}
 
 	if rc != 0 {
@@ -235,7 +235,7 @@ func validateBenchMainPrep(t *testing.T, args []string, params benchmarkCommandP
 
 	rc, err := benchMain(args, params, &buf, mockRunner)
 	if err != nil {
-		t.Fatalf("unexpected error: %s", err)
+		t.Fatalf("Unexpected error: %s", err)
 	}
 	if rc != 0 {
 		t.Fatalf("Unexpected return code %d, expected 0", rc)
@@ -281,7 +281,7 @@ func TestBenchMainInvalidInputFile(t *testing.T) {
 
 		rc, err := benchMain(args, params, &buf, &mockBenchRunner{})
 		if err != nil {
-			t.Fatalf("unexpected error: %s", err)
+			t.Fatalf("Unexpected error: %s", err)
 		}
 		if rc != 1 {
 			t.Fatalf("Unexpected return code %d, expected 1", rc)
