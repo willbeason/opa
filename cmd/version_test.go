@@ -88,7 +88,7 @@ func expectOutputKeys(t *testing.T, stdout string, expectedKeys []string) {
 		t.Fatalf("expected %v but got %v", expectedKeys, gotKeys)
 	}
 
-	for i, got := range expectedKeys {
+	for i, got := range gotKeys {
 		if expectedKeys[i] != got {
 			t.Fatalf("expected %v but got %v", expectedKeys, gotKeys)
 		}
