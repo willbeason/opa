@@ -3754,7 +3754,7 @@ func rewriteDeclaredVar(g *localVarGenerator, stack *localDeclaredVars, v Var, o
 // not contain terms that require evaluation as values. If this function
 // encounters an invalid with modifier target then it will raise an error.
 func rewriteWithModifiersInBody(c *Compiler, f *equalityFactory, body Body) (Body, *Error) {
-	result := Body{}
+	var result Body
 	for i := range body {
 		exprs, err := rewriteWithModifier(c, f, body[i])
 		if err != nil {
