@@ -22,7 +22,7 @@ github.com/bytecodealliance/wasmtime-go/build/windows-x86_64
 github.com/cenkalti/backoff/v4
 # github.com/cespare/xxhash v1.1.0
 github.com/cespare/xxhash
-# github.com/cespare/xxhash/v2 v2.1.2
+# github.com/cespare/xxhash/v2 v2.2.0
 github.com/cespare/xxhash/v2
 # github.com/containerd/containerd v1.6.4
 ## explicit
@@ -167,7 +167,7 @@ github.com/google/flatbuffers/go
 # github.com/gorilla/mux v1.8.0
 ## explicit
 github.com/gorilla/mux
-# github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.0
+# github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3
 github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule
 github.com/grpc-ecosystem/grpc-gateway/v2/runtime
 github.com/grpc-ecosystem/grpc-gateway/v2/utilities
@@ -245,7 +245,7 @@ github.com/spf13/cobra/doc
 # github.com/spf13/pflag v1.0.5
 ## explicit
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.7.1
+# github.com/stretchr/testify v1.8.1
 ## explicit
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
@@ -267,7 +267,7 @@ github.com/xeipuuv/gojsonreference
 # github.com/yashtewari/glob-intersection v0.1.0
 ## explicit
 github.com/yashtewari/glob-intersection
-# go.opencensus.io v0.23.0
+# go.opencensus.io v0.24.0
 go.opencensus.io
 go.opencensus.io/internal
 go.opencensus.io/trace
@@ -332,7 +332,7 @@ go.opentelemetry.io/proto/otlp/trace/v1
 go.uber.org/automaxprocs/internal/cgroups
 go.uber.org/automaxprocs/internal/runtime
 go.uber.org/automaxprocs/maxprocs
-# golang.org/x/net v0.0.0-20220107192237-5cfca573fb4d
+# golang.org/x/net v0.5.0
 ## explicit
 golang.org/x/net/bpf
 golang.org/x/net/context/ctxhttp
@@ -347,29 +347,29 @@ golang.org/x/net/internal/timeseries
 golang.org/x/net/ipv4
 golang.org/x/net/ipv6
 golang.org/x/net/trace
-# golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+# golang.org/x/sync v0.1.0
 golang.org/x/sync/errgroup
 golang.org/x/sync/semaphore
-# golang.org/x/sys v0.0.0-20220412211240-33da011f77ad
+# golang.org/x/sys v0.4.0
 golang.org/x/sys/execabs
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
-# golang.org/x/text v0.3.7
+# golang.org/x/text v0.6.0
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-# golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac
+# golang.org/x/time v0.1.0
 ## explicit
 golang.org/x/time/rate
-# google.golang.org/genproto v0.0.0-20220107163113-42d7afdf6368
+# google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f
 google.golang.org/genproto/googleapis/api/httpbody
 google.golang.org/genproto/googleapis/rpc/errdetails
 google.golang.org/genproto/googleapis/rpc/status
 google.golang.org/genproto/protobuf/field_mask
-# google.golang.org/grpc v1.46.2
+# google.golang.org/grpc v1.53.0
 ## explicit
 google.golang.org/grpc
 google.golang.org/grpc/attributes
@@ -388,6 +388,7 @@ google.golang.org/grpc/encoding
 google.golang.org/grpc/encoding/gzip
 google.golang.org/grpc/encoding/proto
 google.golang.org/grpc/grpclog
+google.golang.org/grpc/health/grpc_health_v1
 google.golang.org/grpc/internal
 google.golang.org/grpc/internal/backoff
 google.golang.org/grpc/internal/balancer/gracefulswitch
@@ -420,7 +421,7 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
-# google.golang.org/protobuf v1.28.0
+# google.golang.org/protobuf v1.28.1
 google.golang.org/protobuf/encoding/protojson
 google.golang.org/protobuf/encoding/prototext
 google.golang.org/protobuf/encoding/protowire
@@ -453,12 +454,13 @@ google.golang.org/protobuf/types/descriptorpb
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/fieldmaskpb
+google.golang.org/protobuf/types/known/structpb
 google.golang.org/protobuf/types/known/timestamppb
 google.golang.org/protobuf/types/known/wrapperspb
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit
 gopkg.in/yaml.v2
-# gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
+# gopkg.in/yaml.v3 v3.0.1
 gopkg.in/yaml.v3
 # oras.land/oras-go v1.1.1
 ## explicit
